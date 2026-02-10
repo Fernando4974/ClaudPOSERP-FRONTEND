@@ -1,0 +1,51 @@
+
+.buttons{
+  padding-top:120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1%;
+}
+.button_product{
+  margin: 0 1%;
+  width: 80px;
+  height: 80px;
+
+}
+button{
+  border-radius: 0%;
+  background-color: #ffffff;
+  border: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+
+  
+
+}
+label{
+  display: flex;
+
+  justify-content: center;
+}
+ 
+
+
+@media (max-width:600px) {
+  .buttons{
+    padding-top:120px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1%;
+  }
+  .button_product{
+    margin: 0 1%;
+ 
+
+  }
+  
+}

@@ -1,0 +1,18 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <h3>{{ title }}</h3>
+    <p>{{ message }}</p>
+
+    <div class="modal-actions">
+      @if (showCancel) {
+        <button class="btn-cancel" (click)="cancel()">
+          {{ btnCancelText }}
+        </button>
+      }
+
+      <button [class]="okBtnClass" (click)="confirm()">
+        {{ btnOkText }}
+      </button>
+    </div>
+  </div>
+</div>

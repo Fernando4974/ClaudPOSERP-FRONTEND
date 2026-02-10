@@ -1,0 +1,697 @@
+:root {
+    --bg-dark: #1e1e1e;
+    --text-light: #ffffff;
+    --border-color: #2a2a2a;
+    --key-gray-dark: #242424;
+    --key-gray-mid: #2f2f2f;
+    --key-gray-light: #3c3c3c;
+    --key-num: #1b1b1b;
+    --key-orange: #e67e22;
+    --key-blue: #1a3c77;
+    --key-green: #25a35a;
+    --key-purple: #2a225d;
+    --key-red: #a82e2e;
+    --key-yellow: #e6e637;
+    --key-department: #edf7f7;
+    --receipt-bg: #fff;
+    --receipt-text: #000;
+}
+
+
+
+
+.body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: 'Consolas', 'Courier New', monospace;
+    margin: 0;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: auto;
+}
+
+.pos-simulation-container {
+    display: grid;
+    grid-template-columns: 2fr 3fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 15px;
+    width: 100%;
+    max-width: 1300px;
+}
+
+/* === PANTALLAS Y PERILLA === */
+.receipt-area {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    background-color: var(--receipt-bg);
+    color: var(--receipt-text);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    border-radius: 6px;
+    padding: 10px 15px;
+    height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    border: 1px solid #000;
+}
+
+.receipt-area h3,
+.receipt-area p {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.receipt-area hr {
+    border-top: 1px dashed #999;
+    margin: 6px 0;
+}
+
+.receipt-area .total {
+    font-weight: bold;
+    color: #c00;
+}
+
+.receipt-area p span {
+    margin-left: auto;
+    padding-left: 10px;
+}
+
+.pantalla-azul {
+    grid-column: 2 / 3;
+    grid-row: 1;
+    background-color: #001a33;
+    color: #00ff99;
+    border-radius: 6px;
+    padding: 10px 20px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 1rem;
+    border: 1px solid #0a1a5a;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+}
+
+.input-display p {
+    margin: 5px 0;
+}
+
+.date-time-box {
+    border: 1px solid #00ff99;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.rotary-switch-container {
+    grid-column: 3 / 4;
+    grid-row: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rotary-switch {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background-color: #555;
+    border: 4px solid #222;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.rotary-switch::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background-color: #161515;
+    border-radius: 50%;
+}
+
+.rotary-switch::after {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: calc(50% - 3px);
+    width: 6px;
+    height: 22px;
+    background-color: var(--key-red);
+    border-radius: 2px;
+}
+
+.rotary-switch .label {
+    position: absolute;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: var(--text-light);
+}
+
+.reg {
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.x {
+    top: 35px;
+    right: 10px;
+}
+
+.z {
+    bottom: 35px;
+    right: 10px;
+}
+
+.pgm-l {
+    bottom: 10px;
+    left: 35px;
+}
+
+.pgm-r {
+    bottom: 10px;
+    right: 35px;
+}
+
+.off {
+    top: 35px;
+    left: 10px;
+}
+
+/* === TECLADO === */
+/* .cash-register {
+    grid-column: 1 / span 3;
+    grid-row: 2;
+    display: flex;
+    gap: 10px;
+    background-color: var(--key-gray-dark);
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+    align-items: stretch;
+    justify-content: center;
+} */
+
+.cash-register {
+    grid-column: 1 / span 3;
+    grid-row: 2;
+    display: flex;
+    gap: 10px;
+    background-color: #2a2a2a;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+    align-items: stretch;
+    justify-content: center;
+    position: relative;
+}
+
+.cash-register button {
+    font-family: inherit;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.7);
+    transition: all 0.05s ease;
+    text-align: center;
+    line-height: 1.2;
+    font-size: 0.7rem;
+    padding: 4px;
+    position: relative;
+}
+
+.cash-register button:active {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+    transform: translateY(2px);
+}
+
+.left-panel,
+.center-panel,
+.right-panel,
+.right-panel-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+
+.left-panel {
+position: relative;
+ top: 100px;
+ left: -96px;
+}
+
+
+/* we woking here */
+.right-panel-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    flex-shrink: 0;
+
+}
+
+#fusion {
+    gap: 0px;
+    padding-left: 0%;
+    margin-left: 0%;
+}
+
+.left-panel button,
+.center-panel button {
+    width: 80px;
+    height: 38px;
+
+}
+
+.left-panel button {
+width: 75px;
+height: 60px;
+
+display: flex;
+justify-content: center;
+align-items: center;
+font-weight: bold;
+}
+
+
+.right-panel button {
+    width: 80px;
+    height: 38px;
+}
+
+
+
+.number-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 70px);
+    grid-template-rows: repeat(6, 64px);
+    gap: 6px;
+    flex-shrink: 0;
+    position:relative;
+    left: -5px;
+    top: 10px;
+}
+
+.number-pad button {
+width: 70px;
+height: 64px;
+background-color: black;
+display: flex;
+justify-content: center;
+align-items: center;
+font-weight: bold;
+}
+
+
+/* CONTENEDOR PRINCIPAL */
+.main-keys {
+position: relative;
+display: flex;
+flex-direction: column;
+gap: 8px;
+flex-shrink: 0;
+left: 65px;
+
+}
+
+/* CONTENEDOR SECUNDARIO (POSICIÓN) */
+.main-keys2 {
+display: flex;
+flex-direction: column;
+gap: 8px;
+flex-shrink: 0;
+position: relative;
+top: 10px;
+left: 120px;
+}
+
+/* TECLADO — VERSIÓN LIMPIA Y ÚNICA */
+.key-grid {
+display: grid;
+grid-template-columns: repeat(5, 76px);
+grid-template-rows: repeat(5, 60px);
+gap: 8px;
+background-color: #333333;
+padding: 12px;
+border-radius: 8px;
+
+
+min-width: max-content;
+min-height: max-content;
+}
+
+/* BOTONES DEL TECLADO */
+.key-grid button {
+width: 96%;
+height: 100%;
+background-color:white;
+color: rgb(0, 0, 0);
+font-size: 1rem;
+font-weight: bold;
+border-radius: 6px;
+border: none;
+cursor: pointer;
+
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+
+.special-keys {
+    display: grid;
+    grid-template-columns: repeat(3, 55px);
+    gap: 6px;
+    margin-left: 10px;
+}
+
+.special-keys2 {
+    display: grid;
+    grid-template-columns: repeat(2, 55px);
+    gap: 6px;
+}
+
+.special-keys button {
+    height: 38px;
+}
+
+/* Colores */
+.orange {
+    background-color: var(--key-orange);
+}
+
+#double {
+    height: 80px;
+}
+
+.red {
+    background-color: var(--key-red);
+    height: 86px !important;
+}
+.red2 {
+    background-color: var(--key-red);
+    height: 131px !important;
+}
+
+
+
+.num,
+.black {
+    background-color: var(--key-num);
+    font-size: 0.9rem;
+}
+
+.gray {
+    background-color: var(--key-gray-light);
+}
+
+.purple {
+    background-color: var(--key-purple);
+}
+
+.green {
+    background-color: var(--key-green);
+}
+
+.blue {
+    background-color: var(--key-blue);
+}
+
+.yellow {
+    background-color: var(--key-yellow);
+    color: var(--key-gray-dark);
+}
+
+.large {
+    height: 120px !important;
+    font-size: 0.8rem;
+}
+
+.right-panel .gray {
+    background-color: var(--key-purple);
+}
+
+
+
+#feed-container {
+position: absolute !important;
+top: 15px !important;
+left: 15px !important;
+z-index: 10 !important;
+
+
+flex-shrink: 0 !important;
+flex-grow: 0 !important;
+flex-basis: auto !important;
+width: 0 !important;
+height: 0 !important;
+}
+
+
+#receipt-container {
+position: absolute !important;
+margin-left: 15px !important;
+top: 15px !important;
+
+
+left: 160px !important;
+z-index: 10 !important;
+
+/* Anulación de Flexbox */
+flex-shrink: 0 !important;
+flex-grow: 0 !important;
+flex-basis: auto !important;
+width: 0 !important;
+height: 0 !important;
+}
+
+
+#feed-container button,
+#receipt-container button {
+width: 80px !important;
+}
+
+
+#post-container,
+#price-container,
+.cash-register > .number-pad,
+.cash-register > .main-keys,
+.cash-register > .main-keys2 {
+margin-top: 90px !important;
+}
+
+
+.gray-key-row {
+position: absolute;
+top: 25px;
+left: 72%;
+transform: translateX(-50%);
+display: flex;
+gap: 5px;
+z-index: 10;
+}
+
+.gray-key-row .gray {
+background-color: #5a5a5a;
+color: white;
+border: none;
+padding: 25px 30px;
+border-radius: 6px;
+font-weight: bold;
+cursor: pointer;
+}
+
+.gray-key-row #larga {
+width: 100px;
+}
+
+
+.left-gray-row {
+width: 180px;
+height: px;
+position: absolute;
+top: 27px;
+left: 70px;
+display: flex;
+gap: 10px;
+
+}
+
+.left-gray-row .gray {
+width: 75px;
+height: 62px;
+background-color: gray;
+color: white;
+border: none;
+border-radius: 6px;
+font-weight: bold;
+cursor: pointer;
+gap: 8px;
+}
+
+#larga {
+background-color: rgb(39, 190, 26);
+}
+
+#subtotal {
+background-color: rgb(140, 143, 140);
+}
+
+#ra {
+background-color: rgb(54, 56, 197);
+}
+
+#po {
+background-color: rgb(54, 56, 197);
+}
+
+#tax {
+background-color: rgb(23, 23, 31);
+color: #25a35a;
+}
+
+#clk {
+background-color: rgb(206, 136, 30);
+}
+
+#porcentaje {
+background-color: rgb(59, 153, 36);
+}
+
+#menos {
+background-color: #a82e2e;
+}
+
+
+#t2 {
+background-color: rgb(13, 41, 133);
+}
+
+#t1 {
+background-color: rgb(13, 41, 133);
+}
+
+#ns {
+background-color: rgb(110, 111, 116);
+}
+
+#date {
+background-color: rgb(110, 111, 116);
+}
+
+#rs {
+background-color: #a82e2e;
+}
+
+#receip {
+background-color: #e67e22;
+
+}
+
+.Teclas_arriba {
+position: absolute;
+top: 25px;
+left: 34%;
+transform: translateX(-50%);
+display: flex;
+gap: 5px;
+z-index: 10;
+}
+
+.Teclas_arriba .gray {
+background-color: #5a5a5a;
+color: white;
+border: none;
+padding: 26px 32px;
+border-radius: 6px;
+font-weight: bold;
+cursor: pointer;
+
+display: flex;
+justify-content: center;
+align-items: center;
+width: 700px;
+height: 55px;
+}
+
+.Teclas_arriba #larga {
+width: 50px;
+}
+
+.special-keys3 {
+display: flex;
+flex-direction: column;
+gap: 10px;
+align-items: center;
+}
+
+.special-keys3 button {
+width: 120px;
+font-size: 1rem;
+font-weight: bold;
+
+position: relative;
+left: -25px;
+top: 0px;
+}
+
+#Boton_C {
+height: px;;
+}
+
+
+.display-text-title {
+  display: flex;            /* Activa el modo Flexbox */
+  justify-content: space-between; /* Empuja los elementos a los extremos */
+  align-items: center;      /* Alinea verticalmente al centro */
+  width: 100%;             /* Asegura que ocupe todo el ancho disponible */
+  padding: 10px;           /* Espaciado interno opcional */
+
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+}
+.order-list {
+  height: 400px;         /* Ajusta esta altura a tu gusto */
+  overflow-y: auto;      /* Crea el scroll vertical cuando se llena */
+  display: flex;
+  flex-direction: column;
+
+  padding: 10px;
+
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;        /* Importante: evita que los items se aplasten */
+  padding: 5px 0;
+  border-bottom: 1px dashed #eee;
+}
+.order-item {
+  display: flex;
+  align-items: baseline;
+}
+
+.item-name {
+  flex: 1; /* Ocupa todo el espacio posible */
+  display: flex;
+  align-items: baseline;
+}
+
+.item-name::after {
+  content: "";
+  flex: 1;
+  margin: 0 5px;
+  border-bottom: 2px dotted #ccc; /* La línea de puntos automática */
+}

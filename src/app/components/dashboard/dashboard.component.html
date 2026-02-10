@@ -1,0 +1,36 @@
+<app-navbar></app-navbar>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="buttons">
+
+
+
+ <div class="button"> <button type="button" class='btn' src="" name="Productos" (click)="posModule()"><img class="button_product" src="shopping.png" alt="imgProduct"></button><br>
+<label for="">Punto de Venta</label></div>
+
+<div class="button">
+  <button type="button" class='btn' src="" name="Productos" (click)="productModule()">
+  <img class="button_product" src="box.png" alt="imgProduct">
+</button>
+<br>
+<label for="Productos">Productos</label>
+</div>
+ <div class="button"> <button type="button" class='btn' src="" name="Productos" (click)="countModule()"><img class="button_product" src="tax-calculate.png" alt="imgProduct"></button><br>
+<label for="">Contabilidad</label></div>
+ <div class="button"> <button type="button" class='btn' src="" name="Productos" (click)="configModule()"><img class="button_product" src="gears.png" alt="imgProduct"></button><br>
+<label for="">Ajustes</label></div>
+ <div class="button"> <button type="button" class='btn' src="" name="Productos" (click)="clientModule()"><img class="button_product" src="handshake.png" alt="imgProduct"></button><br>
+<label for="">Soporte</label></div>
+ <div class="button"> <button [disabled]="true" style="opacity: 0.2;" type="button" class='btn' src="" name="Productos" (click)="employedModule()"><img class="button_product" src="user.png" alt="imgProduct"></button><br>
+<label for="">Empleados</label> <p style="color: green;">( Proximamente )</p></div>
+
+</div>
+</body>
+</html>
+

@@ -1,0 +1,59 @@
+/* Quitamos el punto de .body porque es una etiqueta, no una clase */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f9;
+    min-height: 100vh;
+}
+
+/* Este es el contenedor mágico */
+.main-layout {
+    display: flex; /* Alinea hijos (sidebar y container) en fila */
+    align-items: flex-start;
+}
+
+.module-container {
+    flex-grow: 1; /* Hace que el contenedor ocupe el resto del espacio */
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center; /* Centra los cuadritos dentro de su espacio */
+    padding-top: 170px; /* Ajusta según el alto de tu navbar */
+}
+
+#casio {
+    max-width: 60px;
+}
+
+.module-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 180px;
+}
+
+.module-icon {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 40px;
+    cursor: pointer; /* Para que parezca clickeable */
+    transition: transform 0.2s;
+}
+
+.module-icon:hover {
+    transform: scale(1.05); /* Efecto visual al pasar el mouse */
+}
+
+.module-label {
+    font-size: 17px;
+    color: #333;
+    font-weight: 600;
+}

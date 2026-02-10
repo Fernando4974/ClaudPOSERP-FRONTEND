@@ -1,0 +1,62 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.modal-actions {
+  margin-top: 1.5rem;
+  display: flex; justify-content:space-between;
+}
+
+.btn-confirm { background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; }
+.btn-cancel { background-color: rgb(11, 86, 184); color: white; border: none; padding: 10px 20px; border-radius: 4px; }
+/* ... (tu código de overlay y content está perfecto) ... */
+
+.modal-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center; /* Centra los botones */
+  gap: 20px;               /* Espacio entre botones */
+}
+
+/* Clases base para botones */
+button {
+  cursor: pointer;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.btn-cancel {
+  background-color:#28a745;
+  color: white;
+}
+
+/* Esta es la clase que pasas por defecto desde el TS */
+.btn-primary {
+  background-color: #dc3545; /* Rojo (útil para eliminar) */
+  color: white;
+}
+
+.btn-success {
+  background-color: #28a745; /* Verde (útil para guardar) */
+  color: white;
+}

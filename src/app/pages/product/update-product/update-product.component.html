@@ -1,0 +1,144 @@
+<app-navbar></app-navbar>
+<div class="wraper">
+  <app-sidebar></app-sidebar>
+  <div class="body">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form-container">
+      <h3 class="title">Editar Producto</h3>
+
+      <header class="form-header d-flex justify-content-between align-items-start mb-4">
+        <div class="title-section d-flex align-items-center flex-grow-1">
+          <i class="fa fa-star-o text-muted me-3" style="font-size: 1.5rem"></i>
+          <div class="input-group">
+            <input formControlName="title" type="text"
+              class="form-control form-control-lg form-control-plaintext product-name-input" value="{{ this.title }}" />
+          </div>
+        </div>
+
+        <div class="image-upload-container ms-4">
+          <div class="image-box" (click)="fileInput.click()" style="cursor: pointer">
+            @if (!imagePreview) {
+            <div class="placeholder-wrapper">
+              <img src="camera-icon.png" class="camera-logo" alt="Subir imagen" />
+              <div class="plus-circle">
+                <i class="fa fa-plus"></i>
+              </div>
+            </div>
+            } @else {
+            <img [src]="imagePreview" class="img-preview" style="width: 100%; height: 100%; object-fit: cover" />
+            }
+
+            <input #fileInput type="file" (change)="onFileSelected($event)" hidden accept="image/*" />
+          </div>
+        </div>
+      </header>
+
+      <div class="form-controls mb-4">
+        <div class="form-check">
+          <input formControlName="posAvalible" class="form-check-input" type="checkbox" id="checkVendido"
+            value="{{ this.id }}" />
+          <label class="form-check-label field-label" for="checkVendido">
+            Disponible en punto de venta
+          </label>
+        </div>
+      </div>
+
+      <div class="tab-content" id="myTabContent">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="field-label mb-1">Categoría *</label>
+              <input formControlName="categorie" type="text" class="form-control field-value" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="field-label mb-1">Descripción</label>
+              <input formControlName="description" type="text" class="form-control field-value" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="field-label mb-1">Precio de venta *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-0 border-bottom">$</span>
+                <input formControlName="price" type="text" class="form-control field-value-price w-auto" />
+                <small class="ms-2 text-muted align-self-center">(impuestos incluidos)</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="field-label mb-1">Codigo de barras</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-0 border-bottom">#</span>
+                <input formControlName="barcode" type="text" class="form-control field-value-price w-auto" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="field-label mb-1">Tecla de acceso rapido</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-0 border-bottom">#</span>
+                <input formControlName="numberKey" type="text" class="form-control field-value-price w-auto" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="field-label mb-1">Existencias</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-0 border-bottom">#</span>
+                <input formControlName="stock" type="text" class="form-control field-value-price w-auto" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <button type="submit" class="btn btn-success px-4 py-2" [disabled]="productForm.invalid" onclick=''>
+            Editar Producto
+          </button>
+
+          <span>&nbsp;</span>
+          <button type="button" class="btn btn-danger px-4 py-2" [disabled]="productForm.invalid"
+            (click)="showModal =true">
+            Eliminar Producto
+          </button>
+          @if (showModal) {
+          <app-confirm-modal-component title="Eliminar Producto" message="Realmete Deseas Eliminar el Producto?"
+            btnOkText="Sí, Eliminar" (onConfirm)="executeAction()" (onCancel)="showModal = false"></app-confirm-modal-component>
+          }
+        </div>
+        @if (showModalExit) {
+          <app-confirm-modal-component
+  title="Producto Eliminado"
+  message="El registro ha sido removido de la base de datos."
+  btnOkText="Ok"
+  okBtnClass="btn-success"
+  [showCancel]="false"
+  (onConfirm)="comeBack()">
+</app-confirm-modal-component>
+          }
+
+        <div class="alert-container mt-3">
+          @if (alertText) {
+          <p id="alertTexto" class="text-danger font-weight-bold">
+            {{ alertText }}
+          </p>
+          }
+          @if (alertTextOK) {
+          <p id="alertTextOK" class="text-success font-weight-bold">
+            {{ alertTextOK }}
+          </p>
+          }
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

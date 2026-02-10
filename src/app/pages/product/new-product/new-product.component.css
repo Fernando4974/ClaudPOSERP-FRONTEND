@@ -1,0 +1,217 @@
+
+
+.wraper {
+  display: flex;
+  width: 100%;
+}
+
+.body {
+  flex-grow: 1; /* Esto hace que el formulario ocupe todo el ancho */
+  padding: 2rem;
+  background-color: #f8f9fa; /* Un gris muy claro de fondo para resaltar el blanco del form */
+}
+
+.product-form-container {
+  width: 100%;
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+
+.title{
+  display: flex;
+  padding-left: 1%;
+}
+#alertTexto{
+  color: red;
+}
+#alertTextOK{
+  color:green;
+}
+
+
+/* Estilos generales del formulario (simulando el área blanca) */
+.product-form-container {
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo de la cabecera para el título grande */
+.product-name-input {
+    width: 700px;;
+    font-size: 2.5rem;
+    font-weight: 300;
+    border: none !important;
+    padding: 0 !important;
+    color: #888; /* Color gris suave */
+}
+
+.product-name-input:focus {
+    color: #333; /* Color oscuro al enfocar */
+}
+
+/* Estilo para el marcador de posición de la imagen */
+.image-upload-placeholder {
+    width: 100px;
+    height: 100px;
+    border: 1px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: #fafafa;
+}
+
+/* Estilo de las pestañas */
+.nav-tabs .nav-link {
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #666;
+    margin-right: 15px;
+    padding: 10px 0;
+}
+
+.nav-tabs .nav-link.active {
+    border-bottom-color: #007bff; /* Color azul para la pestaña activa */
+    color: #333;
+    font-weight: 500;
+}
+
+/* Estilo de las etiquetas (preguntas y campos de valor) */
+.field-label {
+    font-weight: 500; /* Hace la etiqueta más oscura */
+    color: #333;
+    cursor: help; /* Indica que hay una ayuda o tooltip (el icono de pregunta) */
+}
+
+.field-value {
+    /* Estilo del campo de texto (similar a un texto plano y editable) */
+    border: none;
+    border-bottom: 1px solid #ccc !important;
+    padding: 5px 0;
+    background-color: transparent !important;
+}
+
+.field-value:focus {
+    border-bottom-color: #007bff !important;
+    box-shadow: none !important;
+}
+
+/* Estilo para el precio */
+.field-value-price {
+    width: 80px;
+    text-align: right;
+    border: none;
+    border-bottom: 1px solid #ccc !important;
+    padding: 5px 0;
+    background-color: transparent !important;
+}
+
+/* Estilo para el tag de impuesto (simulación) */
+.tax-tag {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.9em;
+}
+
+.tax-tag .close-btn {
+    margin-left: 5px;
+    cursor: pointer;
+    color: #888;
+}
+
+/* Forzar la alineación a la izquierda en todo el formulario */
+.product-form-container {
+    text-align: left; /* Alinea todo el contenido a la izquierda */
+}
+
+/* Estilo específico para los labels */
+.field-label {
+    display: block;      /* Hace que el label ocupe toda la línea */
+    text-align: left;    /* Alineación explícita a la izquierda */
+    margin-bottom: 5px;  /* Espacio entre el label y el input */
+    font-weight: 500;
+    color: #333;
+}
+
+/* Asegurar que las columnas de Bootstrap no centren el contenido */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinea los hijos (label e input) al inicio (izquierda) */
+}
+/* Contenedor del cuadro */
+.image-box {
+    width: 120px;
+    height: 120px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    background-color: #fcfcfc;
+    transition: all 0.2s;
+}
+
+.image-box:hover {
+    background-color: #f0f0f0;
+    border-color: #bbb;
+}
+
+/* Icono de mas (+) pequeño en la esquina del icono de cámara */
+.plus-icon {
+    position: absolute;
+    bottom: 35%;
+    right: 35%;
+    background: white;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+/* Previsualización de la imagen cargada */
+.img-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Ajuste para que el input de nombre no choque con la imagen */
+.product-name-input {
+    border-bottom: 1px solid #dee2e6 !important; /* Añade la linea sutil de abajo */
+    margin-right: 20px;
+}
+.image-box {
+    width: 110px;
+    height: 110px;
+    border: 1px dashed #ccc; /* Estilo punteado para indicar que es para subir */
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: #fafafa;
+    position: relative;
+    transition: background 0.2s;
+}
+
+.image-box:hover {
+    background-color: #f0f0f0;
+}
+
+/* El logo de la cámara que pondrás en public */
+.camera-logo {
+    width: 60px;
+    height: auto;
+    opacity: 0.6;
+}

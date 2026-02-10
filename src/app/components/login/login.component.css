@@ -1,0 +1,10 @@
+.wraper{
+display: flex;
+justify-content: center;
+align-items: center;
+margin-top: 4%;
+}
+#logo{
+  max-height: 100px;
+  border-radius: 5%;
+}

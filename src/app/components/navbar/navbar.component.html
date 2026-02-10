@@ -1,0 +1,14 @@
+<nav class="navbar bg-body-tertiary" data-bs-theme="dark">
+  <div class="container-fluid">
+    <div>
+    <img src="cloud (1).png" id="iconoNube" style="max-width: 40px;" alt="notFund">
+    <a class="navbar-brand mb-3" > ClaudPosERP</a>
+    </div>
+
+    <form *ngIf="flagExitButton"  class="d-flex" role="search">
+
+      <a class="btn btn-outline-success" type="submit" href="/logIn" (click)="logOut()">Salir</a>
+    </form>
+  </div>
+</nav>
+

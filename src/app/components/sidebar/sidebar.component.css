@@ -1,0 +1,72 @@
+.main-container {
+  display: flex;
+  height: 100vh;
+}
+
+
+.sidebar {
+
+width: 200px;
+    display: flex;
+    flex-direction: column; /* ¡CLAVE! Asegura que los hijos (ul, y cualquier otro elemento) se apilen verticalmente */
+    background-color:#f0ebd8;
+    padding: 20px;
+    height: 100%;
+    /* Añadido para asegurar que los ítems se inicien desde arriba */
+    justify-content: flex-start;
+}
+
+
+.content {
+
+  flex-grow: 1;
+  padding: 20px;
+}
+/* Estilos para la lista no ordenada (el menú completo) */
+.sidebar ul {
+
+    list-style-type: none; /* Elimina los puntos predeterminados */
+    padding: 0;           /* Elimina el padding predeterminado */
+    margin: 0;
+              /* Elimina el margen predeterminado */
+
+
+}
+#last{
+margin-top:20cqmax;
+}
+
+/* Estilos para cada elemento de la lista (cada opción del menú) */
+.sidebar li {
+    margin-bottom: 5px;   /* Espacio entre cada elemento del menú */
+}
+
+/* Estilos para el enlace (el texto de la opción) */
+.sidebar a {
+    display: block;        /* Hace que el enlace ocupe todo el ancho de su contenedor (el <li>) */
+    text-decoration: none; /* Elimina el subrayado predeterminado */
+    color: #333;           /* Color del texto */
+    padding: 10px 15px;    /* Relleno interior para que el área de clic sea más grande */
+    border-radius: 5px;    /* Esquinas ligeramente redondeadas */
+    transition: background-color 0.3s, color 0.3s; /* Transición suave para el hover */
+}
+
+/* Estilos para cuando el cursor está sobre el enlace (interacción) */
+.sidebar a:hover {
+    /*background-color: #f0ebd8 ;/* Un color de fondo más suave al pasar el ratón */
+    color: #3e5c76;            /* Un color de texto más oscuro o contrastante */
+    font-weight: bold;         /* Hace el texto un poco más audaz */
+}
+
+/* Estilos para el elemento activo (si quieres resaltar la página actual) */
+/* Tendrías que añadir una clase "active" al <a> que corresponda a la página actual */
+.sidebar a.active {
+    background-color:#748cab    ;
+    color: white;
+}
+#soporte{
+  align-content: end;
+}
+
+
+
