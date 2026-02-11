@@ -49,7 +49,7 @@ export class ProductService {
   _findNumberKey(data: string): Observable<any> {
 
 
-    return this.http.get<any>(`${this.appUrl}${this.apiValideNumberKey}`)
+    return this.http.get<any>(`${this.appUrl}${this.apiValideNumberKey}/${data}`)
   }
 
   createProduct(newProduct: newProduct, file: File | null): Observable<any> {

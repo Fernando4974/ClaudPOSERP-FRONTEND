@@ -32,7 +32,7 @@ export class NewProductComponent implements OnInit {
   alertText = "";
   alertTextOK = "";
   disableButton:boolean=true
-  continue:boolean = true
+  numberKeyExist:boolean = true
 
   // CORRECCIÓN: Inicializamos como null y permitimos ambos tipos
   selectedFile: File | null = null;
@@ -58,11 +58,14 @@ export class NewProductComponent implements OnInit {
   }
 }
 valideNumberKey(numberKey:string){
-  this.continue=true
+  this.numberKeyExist=true
   this._serviceProduct._findNumberKey(numberKey).subscribe({
     next: (data) =>{
-      this.alertText='Ya Existe un producto con ese numero de acceso rapido'
-      this.continue = false
+      console.log(this.numberKeyExist)
+console.log('inside next valide number key')
+console.log(data)
+      this.numberKeyExist = data.exist
+      console.log(this.numberKeyExist)
     },
     error: (err) => {
       console.log(err)
@@ -96,34 +99,53 @@ valideNumberKey(numberKey:string){
       categorie: formValues.categorie!,
       numberKey: formValues.numberKey ? parseInt(formValues.numberKey.toString(), 10) : undefined
     };
-    if (productToSend.numberKey) {
-    this.valideNumberKey(productToSend.numberKey.toString())
-    }
-    if (this.continue) {
+    console.log(productToSend.numberKey)
+    if (productToSend.numberKey && productToSend.numberKey>0) {
+
+    this._serviceProduct.
+    _findNumberKey(productToSend.numberKey.toString()).
+    subscribe({
+
+      next:(data)=> {
+        if (data.exist) {
+          this.alertText='Ya existe un Producto guardado con esa Tecla de Acceso Rapido'
+          this.loading=false
+          this.disableButton=true
+        }else{
+          this.ejecutarCreacion(productToSend)
+
+        }
 
 
 
-
-    // Enviamos el objeto de datos y el archivo (que puede ser null)
-    this._serviceProduct.createProduct(productToSend, this.selectedFile).subscribe({
-      next: () => {
-        this.disableButton=true
-        this.loading=false
-        this.disableButton=true
-        this.alertTextOK = "Producto creado con éxito";
-        this.alertText = "";
-        this.productForm.reset({ posAvalible: true });
-        this.selectedFile = null; // Limpiamos el archivo
-        this.imagePreview=null;
       },
-      error: (err) => {
-this.disableButton=true
-         this.loading=false
-        this.alertText = "Error al conectar con el servidor";
-        console.log(productToSend)
-        console.error(err);
-      }
-    });
+      error:(err)=> {
+
+        console.log(err)
+
+      },
+
+    })
+
+    }else{
+      this.ejecutarCreacion(productToSend)
+    }
   }
-  }
+
+ejecutarCreacion(productToSend: newProduct) {
+  this._serviceProduct.createProduct(productToSend, this.selectedFile).subscribe({
+    next: () => {
+      this.alertTextOK = "Producto creado con éxito";
+      this.productForm.reset({ posAvalible: true });
+      this.loading = false;
+      this.disableButton = true;
+      this.imagePreview = null;
+    },
+    error: (err) => {
+      this.loading = false;
+      this.disableButton = true;
+      this.alertText = err.error.statusCode === 409 ? "Ya existe un Producto con el mismo nombre" : "Error de servidor";
+    }
+  });
+}
 }
