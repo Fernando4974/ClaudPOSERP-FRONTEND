@@ -7,12 +7,13 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { Router } from '@angular/router';
 import { PaginatioDto } from '../../interfaces/pagination.dto';
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
 
 @Component({
   selector: 'app-product',
   standalone: true,
   // Añadimos FormsModule aquí para que funcione el [(ngModel)]
-  imports: [NgFor, CommonModule, NavbarComponent, SidebarComponent, FormsModule],
+  imports: [NgFor, CommonModule, NavbarComponent, SidebarComponent, FormsModule, SpinnerComponent],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
 })
@@ -22,6 +23,7 @@ export class ProductComponent implements OnInit {
   filteredProducts: GetAllProduct[] = []; // Lista que se muestra en el HTML
   filterTerm: string = ''; // Variable vinculada al input
   pagination: PaginatioDto = { limit: 10, offset: 0 };
+  spinner: boolean = false;
 
   constructor(private productService: ProductService, private router: Router) {}
 
@@ -30,12 +32,15 @@ export class ProductComponent implements OnInit {
   }
 
   getAll() {
+    this.spinner= true
     this.productService.getAllProducts(this.pagination).subscribe({
       next: (data) => {
+        this.spinner= false
         this.listProduct = data;
         this.filteredProducts = data; // Inicialmente mostramos todo
       },
-      error: (err) => console.log(err)
+
+      error: (err) => {console.log(err); this.spinner= false}
     });
   }
 

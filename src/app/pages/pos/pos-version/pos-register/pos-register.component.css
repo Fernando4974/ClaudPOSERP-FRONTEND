@@ -25,14 +25,14 @@
     color: var(--text-light);
     font-family: 'Consolas', 'Courier New', monospace;
     margin: 0;
-    padding: 5px;
+    padding: 10px; /* Reducimos un poco el padding */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    overflow-x: auto;
+    height: 100vh; /* Se mantiene en 100% del alto */
+    box-sizing: border-box; /* Crucial para que el padding no sume tamaño extra */
+    overflow: hidden;
 }
-
 .pos-simulation-container {
     display: grid;
     grid-template-columns: 2fr 3fr 1fr;
@@ -40,6 +40,9 @@
     gap: 15px;
     width: 100%;
     max-width: 1300px;
+    /* Restamos 40px para asegurar que no toque la barra de tareas */
+   transform: scale(0.85); /* Reduce el tamaño al 85% */
+    transform-origin: center center; /* Escala desde el centro */ /* Alinea el contenido al principio si sobra espacio */
 }
 
 /* === PANTALLAS Y PERILLA === */
@@ -694,4 +697,82 @@ height: px;;
   flex: 1;
   margin: 0 5px;
   border-bottom: 2px dotted #ccc; /* La línea de puntos automática */
+}
+
+
+/* --- ÚNICO BLOQUE DE IMPRESIÓN --- */
+@media print {
+    /* 1. Ocultamos todo lo que no sea el ticket */
+    .navbar,
+    .cash-register,
+    .pantalla-azul,
+    .rotary-switch-container {
+        display: none !important;
+    }
+   .titleSale {
+        display: flex !important;
+        visibility: visible !important;
+        text-align: center !important; /* Centra el título */
+        font-size: 16pt !important;    /* Hazlo un poco más grande */
+        font-weight: bold !important;
+        margin-bottom: 10px !important; /* Espacio antes de los artículos */
+        position: static !important;    /* QUITA EL ABSOLUTE para que no flote */
+        width: 100% !important;
+        order: -1 !important;
+    }
+
+    body {
+        background-color: white !important;
+    }
+
+    /* 2. Configuramos el contenedor principal del ticket */
+    #printable-receipt {
+        display:block !important;
+        visibility: visible !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: auto !important;
+        overflow: visible !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: white !important;
+        padding: 5mm;
+        margin: 0;
+        color: black !important;
+        font-family: 'Courier New', monospace !important;
+    }
+
+    /* 3. Ajustamos los párrafos para que los precios queden a la derecha */
+    #printable-receipt p {
+
+        display: flex !important; /* Mantiene el nombre y precio en la misma línea */
+        justify-content: space-between !important;
+        visibility: visible !important;
+        margin: 4px 0 !important;
+    }
+
+    /* 4. Escondemos el precio unitario (asegúrate de usar class="pU" en el HTML) */
+    .pU {
+        display: none !important;
+    }
+    .head{
+      display: none;
+    }
+
+
+
+    /* Forzamos que los spans (precios) se alineen a la derecha */
+    #printable-receipt p span strong {
+        margin-left: auto;
+    }
+
+    /* Quitamos el botón si llegara a aparecer */
+    button { display: none !important; }
+
+    /* Ocultamos botones de acción que estén dentro del recibo */
+    .btn-clear, button {
+        display: none !important;
+    }
 }

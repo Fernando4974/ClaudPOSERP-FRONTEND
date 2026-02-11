@@ -5,15 +5,17 @@ import { newProduct } from '../../../interfaces/product';
 import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { SidebarComponent } from '../../../components/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
+import { SpinnerComponent } from '../../../components/spinner/spinner.component';
 
 @Component({
   selector: 'app-new-product',
   standalone: true,
-  imports: [NavbarComponent, SidebarComponent, ReactiveFormsModule, CommonModule],
+  imports: [NavbarComponent, SidebarComponent, ReactiveFormsModule, CommonModule, SpinnerComponent],
   templateUrl: './new-product.component.html',
   styleUrl: './new-product.component.css'
 })
 export class NewProductComponent implements OnInit {
+  loading:boolean=false;
 
   productForm = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -29,6 +31,8 @@ export class NewProductComponent implements OnInit {
 
   alertText = "";
   alertTextOK = "";
+  disableButton:boolean=true
+  continue:boolean = true
 
   // CORRECCIÓN: Inicializamos como null y permitimos ambos tipos
   selectedFile: File | null = null;
@@ -53,12 +57,32 @@ export class NewProductComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 }
+valideNumberKey(numberKey:string){
+  this.continue=true
+  this._serviceProduct._findNumberKey(numberKey).subscribe({
+    next: (data) =>{
+      this.alertText='Ya Existe un producto con ese numero de acceso rapido'
+      this.continue = false
+    },
+    error: (err) => {
+      console.log(err)
+
+    },
+
+  })
+
+}
 
   onSubmit() {
     if (this.productForm.invalid) {
       this.alertText = "Por favor, revisa los campos obligatorios.";
       return;
     }
+    this.disableButton=false
+       this.alertText = "";
+          this.alertTextOK = "";
+    this.loading=true
+
 
     const formValues = this.productForm.value;
 
@@ -70,12 +94,22 @@ export class NewProductComponent implements OnInit {
       stock: formValues.stock ? parseInt(formValues.stock.toString(), 10) : 0,
       posAvalible: !!formValues.posAvalible,
       categorie: formValues.categorie!,
-      numberKey: formValues.numberKey ? parseInt(formValues.numberKey.toString(), 10) : 0
+      numberKey: formValues.numberKey ? parseInt(formValues.numberKey.toString(), 10) : undefined
     };
+    if (productToSend.numberKey) {
+    this.valideNumberKey(productToSend.numberKey.toString())
+    }
+    if (this.continue) {
+
+
+
 
     // Enviamos el objeto de datos y el archivo (que puede ser null)
     this._serviceProduct.createProduct(productToSend, this.selectedFile).subscribe({
       next: () => {
+        this.disableButton=true
+        this.loading=false
+        this.disableButton=true
         this.alertTextOK = "Producto creado con éxito";
         this.alertText = "";
         this.productForm.reset({ posAvalible: true });
@@ -83,10 +117,13 @@ export class NewProductComponent implements OnInit {
         this.imagePreview=null;
       },
       error: (err) => {
+this.disableButton=true
+         this.loading=false
         this.alertText = "Error al conectar con el servidor";
+        console.log(productToSend)
         console.error(err);
       }
     });
-
+  }
   }
 }

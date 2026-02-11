@@ -3,11 +3,13 @@ import { NavbarComponent } from "../../../../components/navbar/navbar.component"
 import { GetAllProduct } from '../../../../interfaces/product';
 import { ProductService } from '../../../../services/product.service';
 import { count } from 'rxjs';
+import { SaleSevice } from '../../../../services/sales/sale.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-pos-register',
   standalone: true,
-  imports: [NavbarComponent],
+  imports: [NavbarComponent, CommonModule],
   templateUrl: './pos-register.component.html',
   styleUrl: './pos-register.component.css'
 })
@@ -20,7 +22,10 @@ export class PosRegisterComponent implements OnInit {
   //extistProduct:id
 
 
-  constructor(private _productService: ProductService ){}
+  constructor(
+    private _productService: ProductService,
+   private _saleService : SaleSevice
+  ){}
    ngOnInit(): void {
      //console.log(this.listProduct)
   this.getAllProducts()
@@ -130,4 +135,54 @@ get subtotal(): number {
     return this.calcularTotal() + this.calcularIva()
 
   }
+ // Añade esta variable para guardar la venta procesada
+ventaFinalizada: any = null;
+
+// pos-register.component.ts
+
+
+
+crearVenta() {
+  if (this.carrito.length === 0) return;
+
+  // 1. Mapeamos el carrito al DTO que espera NestJS
+  const nuevaVenta = {
+    total: this.calcularTotalMasIva(),
+    status: 'completed',
+    items: this.carrito.map(producto => ({
+      productId: producto.id, // ID del producto en DB
+      quantity: producto.count || 1,
+      priceAtSale: producto.price
+    }))
+  };
+
+  // 2. Llamada al servicio
+  this._saleService.createSale(nuevaVenta).subscribe({
+    next: (res) => {
+      this.ventaFinalizada = res; // Guardamos datos del servidor (ID, fecha)
+      this.showTicket = true;     // Mostramos el recibo en la pantalla de simulación
+
+      // 3. Disparamos la impresión real
+      setTimeout(() => {
+        window.print();
+        // Opcional: limpiar después de imprimir o dejar que el usuario vea el ticket
+        // this.limpiarCarrito();
+      }, 500);
+    },
+    error: (err) => {
+      console.error('Error al procesar venta:', err);
+      alert('Error en el servidor al guardar la venta');
+    }
+  });
+}
+
+imprimirFactura() {
+  window.print(); // Dispara el diálogo de impresión del sistema
+}
+
+limpiarCarrito() {
+  this.carrito = [];
+  this.selectedProduct = null;
+  this.showTicket = false;
+}
 }

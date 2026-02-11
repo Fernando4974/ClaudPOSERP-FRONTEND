@@ -45,6 +45,7 @@ export class LoginComponent {
 
 
   login() {
+    this.loading= true
 
 
 
@@ -125,8 +126,9 @@ export class LoginComponent {
     } catch (e) {
       alert("An unexpected error occurred");
       console.error(e);
+      this.loading = false
     }
-    this.loading = false
+
 
   }
 }

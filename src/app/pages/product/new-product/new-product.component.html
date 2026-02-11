@@ -108,10 +108,11 @@
         </div>
 
         <div class="mt-5">
-          <button type="submit" class="btn btn-primary px-4 py-2" [disabled]="productForm.invalid">
+          <button type="submit" *ngIf="disableButton" class="btn btn-primary px-4 py-2" [disabled]="productForm.invalid">
             Crear Producto
           </button>
         </div>
+          <app-spinner *ngIf="loading"></app-spinner>
 
         <div class="alert-container mt-3">
           @if (alertText) {

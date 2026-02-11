@@ -27,6 +27,7 @@
       </div>
 
       <div>
+
         <div *ngIf="filteredProducts.length === 0" class="alert alert-light mt-2">
           No se encontraron productos que coincidan con "{{filterTerm}}"
         </div>
@@ -57,6 +58,7 @@
           </tr>
         </tbody>
       </table>
+       <app-spinner *ngIf="spinner"></app-spinner>
     </div>
   </div>
 </body>

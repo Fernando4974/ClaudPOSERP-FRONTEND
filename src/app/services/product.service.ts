@@ -15,6 +15,7 @@ export class ProductService {
   appUrl: string = '';
   apiGetOneProduct: string = "";
   apiDeleteProduct: string = "";
+  apiValideNumberKey : string= ''
 
 
 
@@ -22,6 +23,7 @@ export class ProductService {
     this.appUrl = environment.apiUrl
     this.apiGetAllUrl = "products/getAll"
     this.apiNewProductUrl = "products/create"
+    this.apiValideNumberKey = "products/number-key"
     this.apiUpdateProductUrl = "products"
     this.apiGetOneProduct = "products"
     this.apiDeleteProduct = "products"
@@ -41,6 +43,13 @@ export class ProductService {
 
 
     return this.http.get<updateProduct>(`${this.appUrl}${this.apiGetOneProduct}/${id}`)
+  }
+
+
+  _findNumberKey(data: string): Observable<any> {
+
+
+    return this.http.get<any>(`${this.appUrl}${this.apiValideNumberKey}`)
   }
 
   createProduct(newProduct: newProduct, file: File | null): Observable<any> {
