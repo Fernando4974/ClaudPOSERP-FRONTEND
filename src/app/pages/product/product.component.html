@@ -39,9 +39,10 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Price</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Tecla Rapida</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -50,6 +51,7 @@
             <td>{{item.title}}</td>
             <td>{{item.description}}</td>
             <td>$ {{item.price}}</td>
+            <td>* {{item.numberKey}}</td>
             <td>
               <button (click)="editProduct(item.id)" class="btn btn-warning" title="editar">
                 <img src="ajustes.png" alt="ico">
