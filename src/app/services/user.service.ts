@@ -14,12 +14,16 @@ export class UserService {
   private APIUrlLogin:string;
   private APIUrlReqReset:string;
   private APIUrlPasswordReset:string;
+  private APIUrlGetUser:string;
+  private APIUrlUpdateThisUser:string;
   constructor(private readonly http: HttpClient) {
     this.AppUrl=environment.apiUrl;
     this.APIUrlRegister='auth/register'
     this.APIUrlLogin='auth/login'
     this.APIUrlReqReset='auth/password-recovery'
     this.APIUrlPasswordReset='auth/password-reset'
+    this.APIUrlGetUser='auth/user-update'
+    this.APIUrlUpdateThisUser='auth/update-user'
   }
 
    singIn(user:User):Observable<any>{
@@ -30,12 +34,19 @@ export class UserService {
   Login(user:UserLogin):Observable<any>{
     return this.http.post(`${this.AppUrl}${this.APIUrlLogin}`,user)
   }
+  getUser():Observable<any>{
+    return this.http.get(`${this.AppUrl}${this.APIUrlGetUser}`)
+
+  }
   reqPassword(email:string):Observable<any>{
     console.log(this.AppUrl,this.APIUrlReqReset)
     return this.http.post(`${this.AppUrl}${this.APIUrlReqReset}`,{email},{observe:'response'})
   }
   resetPassword(data:any):Observable<any>{
     return this.http.patch(`${this.AppUrl}${this.APIUrlPasswordReset}`,data,{observe:'response'})
+  }
+  updateUser(data:any):Observable<any>{
+    return this.http.patch(`${this.AppUrl}${this.APIUrlUpdateThisUser}`,data)
   }
 
 }

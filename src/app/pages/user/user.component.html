@@ -1,0 +1,127 @@
+<app-navbar></app-navbar>
+<div class="wraper">
+  <app-sidebar></app-sidebar>
+
+
+  <div class="body">
+    <form [formGroup]="userForm" class="product-form-container">
+      <h3 class="title">Actualizar Usuario</h3>
+
+      <header class="form-header d-flex justify-content-between align-items-start mb-4">
+        <div class="title-section d-flex align-items-center flex-grow-1">
+          <i class="fa fa-user-circle-o text-muted me-3" style="font-size: 1.5rem"></i>
+          <div class="input-group">
+            <input formControlName="email" type="email"
+              class="form-control form-control-lg form-control-plaintext product-name-input"
+              placeholder="correo@ejemplo.com"  readonly/>
+          </div>
+        </div>
+
+
+      </header>
+
+      <div class="tab-content">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="field-label mb-1">Nombre *</label>
+              <input formControlName="name" type="text" class="form-control field-value" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="field-label mb-1">Apellido *</label>
+              <input formControlName="lastname" type="text" class="form-control field-value" autocomplete="last-name" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="field-label mb-1">Nueva Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-0 border-bottom">
+                  <i class="fa fa-lock text-muted"></i>
+                </span>
+                <input formControlName="password" type="password" autocomplete="new-password" placeholder="********"
+                  class="form-control field-value w-auto" />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="field-label mb-1">Rol *</label>
+              <select formControlName="roles" class="form-select field-value">
+
+                <option *ngFor=" let options of roleOptions" [value]="options.value" >
+                  {{options.label}}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="field-label mb-1">Estado</label>
+              <select formControlName="isActive" class="form-select field-value">
+                <option *ngFor="let option of statusOptions" [value]="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <br>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="field-label mb-1">Inicio de Membresia</label>
+            <div class="input-group">
+              <span class="input-group-text bg-transparent border-0 border-bottom"><i class="fa fa-lock"></i></span>
+              <input formControlName="membershipStart" type="date" class="form-control field-value w-auto"
+                placeholder="" />
+            </div>
+          </div>
+        </div>
+        <br>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="field-label mb-1">Fin de Membresia</label>
+            <div class="input-group">
+              <span class="input-group-text bg-transparent border-0 border-bottom"><i class="fa fa-lock"></i></span>
+              <input formControlName="membershipEnd" type="date" class="form-control field-value w-auto"
+                placeholder="" />
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <button type="submit" class="btn btn-success px-4 py-2" [disabled]="userForm.invalid"
+            (click)="showModalUpdate = true">
+            Actualizar Usuario
+          </button>
+
+          <button type="button" class="btn btn-danger px-2 py-2" (click)="showModal = true">
+            Eliminar Cuenta
+          </button>
+        </div>
+      </div>
+    </form>
+
+    @if (showModalUpdate){
+    <app-confirm-modal-component title="Actualizar Usuario" message="¿Realmente deseas aplicar los cambios al perfil?"
+      btnOkText="Sí, actualizar" btnCancelText="No" (onConfirm)="executeActionUpdate()"
+      (onCancel)="showModalUpdate=false">
+    </app-confirm-modal-component>
+    }
+
+    @if (showModal) {
+    <app-confirm-modal-component title="Eliminar Usuario"
+      message="¿Realmente deseas eliminar este usuario? Esta acción es irreversible." btnOkText="Sí, Eliminar"
+      (onConfirm)="executeAction()" (onCancel)="showModal = false">
+    </app-confirm-modal-component>
+    }
+
+    <app-spinner *ngIf="visibleSpinner"></app-spinner>
+  </div>
+</div>

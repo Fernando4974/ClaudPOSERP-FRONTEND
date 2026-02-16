@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
   }
   ngOnInit(): void {
 
-   
+
 
   }
 
@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
   }
 
   configModule(){
-    this.router.navigate(["/maintenancePage"]);
+    this.router.navigate(["/user"]);
   }
 
   employedModule(){
