@@ -8,3 +8,10 @@ export interface itemSale{
   quantity:number,
   priceAtSale: number
 }
+export interface GetAllSales {
+  id: string,
+  total: number,
+  status: string,
+  createdAt: string,
+  userId: string,
+}

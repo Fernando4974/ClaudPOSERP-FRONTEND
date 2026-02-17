@@ -33,6 +33,9 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(["/maintenancePage"]);
   }
 
+  salesModule(){
+    this.router.navigate(["/sales"])
+  }
   configModule(){
     this.router.navigate(["/user"]);
   }
