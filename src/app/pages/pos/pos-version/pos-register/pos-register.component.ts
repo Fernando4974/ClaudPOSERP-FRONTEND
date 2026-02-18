@@ -3,7 +3,7 @@ import { NavbarComponent } from "../../../../components/navbar/navbar.component"
 import { GetAllProduct } from '../../../../interfaces/product';
 import { ProductService } from '../../../../services/product.service';
 import { count } from 'rxjs';
-import { SaleSevice } from '../../../../services/sales/sale.service';
+import { SaleService } from '../../../../services/sales/sale.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -18,13 +18,14 @@ export class PosRegisterComponent implements OnInit {
   selectedProduct: GetAllProduct | null = null
   buttons: number[] = Array.from({ length: 25 }, (_, i) => i + 1);
   carrito: GetAllProduct[] = [];
+  iva:number=0
 
   //extistProduct:id
 
 
   constructor(
     private _productService: ProductService,
-   private _saleService : SaleSevice
+   private _saleService : SaleService
   ){}
    ngOnInit(): void {
      //console.log(this.listProduct)
@@ -128,7 +129,8 @@ get subtotal(): number {
   }
   calcularIva(): number{
     const total = this.calcularTotal()
-    return Math.round( total * 0.12)
+     this.iva = Math.round( total * 0.12)
+    return this.iva
   }
   calcularTotalMasIva():number {
 
@@ -148,9 +150,11 @@ crearVenta() {
   // 1. Mapeamos el carrito al DTO que espera NestJS
   const nuevaVenta = {
     total: this.calcularTotalMasIva(),
+    iva: this.iva,
     status: 'completed',
     items: this.carrito.map(producto => ({
-      productId: producto.id, // ID del producto en DB
+      productId: producto.id,
+      title:producto.title, // ID del producto en DB
       quantity: producto.count || 1,
       priceAtSale: producto.price
     }))

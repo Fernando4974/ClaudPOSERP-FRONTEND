@@ -1,0 +1,126 @@
+<app-navbar></app-navbar>
+
+<div class="wraper d-flex">
+
+  <app-sidebar></app-sidebar>
+
+  <div class="body p-4 flex-grow-1" style="overflow-y: auto;">
+
+    <div class="product-form-container">
+      <h3 class="title mb-4">Detalle de la Venta</h3>
+
+      <div class="card shadow-sm mb-5">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Información General</h5>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID Venta</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Usuario</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-muted small">{{ sale?.id }}</td>
+                <td>{{ sale?.createdAt | date:'medium' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="{
+                    'bg-success': sale?.status === 'completed',
+                    'bg-warning': sale?.status === 'pending',
+                    'bg-danger': sale?.status === 'cancelled'
+                  }">{{ sale?.status }}</span>
+                </td>
+                <td>{{ sale?.user?.name || 'N/A' }}</td>
+                <td class="fw-bold text-success">${{ sale?.total | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Productos en esta Venta</h5>
+          <span class="badge bg-light text-dark">{{ sale?.items?.length }} Items</span>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID Producto</th>
+                <th class="w-50">Nombre</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-end">Precio Unitario</th>
+                <th class="text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+          <tr *ngFor="let item of sale?.items">
+    <td class="small text-muted">{{ item.productId.substring(0,8) }}</td>
+    <td class="fw-bold">{{ item.title }}</td>
+    <td class="text-center">{{ item.quantity }}</td>
+    <td class="text-end">${{ item.priceAtSale | number:'1.2-2' }}</td>
+    <td class="text-end fw-bold">${{ (item.quantity * item.priceAtSale) | number:'1.2-2' }}</td>
+  </tr>
+            </tbody>
+            <tfoot class="table-group-divider">
+                <tr>
+                <td colspan="3" class="text-end fw-bold fs-8">Total Antes de IVA:</td>
+                <td class="text-end fw-bold fs-18 text-warning">${{ subtotalSinIva | number:'1.2-2' }}</td>
+              </tr>
+               <tr>
+                <td colspan="3" class="text-end fw-bold fs-10">IVA:</td>
+                <td class="text-end fw-bold fs-10 text-danger">- ${{ sale?.iva | number:'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td colspan="3" class="text-end fw-bold fs-5">Total Venta:</td>
+                <td class="text-end fw-bold fs-5 text-success">${{ sale?.total | number:'1.2-2' }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button type="button" class="btn btn-outline-secondary" (click)="comeBack()">
+          <i class="fa fa-arrow-left"></i> Volver
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="showModal = true"
+          *ngIf="loading"> Cancelar/Eliminar Venta
+        </button>
+      </div>
+
+      @if (showModal) {
+        <app-confirm-modal-component
+          title="Eliminar Venta"
+          message="¿Realmente deseas eliminar este registro de venta?"
+          btnOkText="Sí, Eliminar"
+          (onConfirm)="executeAction()"
+          (onCancel)="showModal = false"
+        ></app-confirm-modal-component>
+      }
+
+      @if (showModalExit) {
+        <app-confirm-modal-component
+          title="Venta Eliminada"
+          message="El registro ha sido removido exitosamente."
+          btnOkText="Ok"
+          okBtnClass="btn-success"
+          [showCancel]="false"
+          (onConfirm)="comeBack()"
+        ></app-confirm-modal-component>
+      }
+    </div>
+
+    <app-spinner *ngIf="visibleSpinner"></app-spinner>
+  </div>
+</div>

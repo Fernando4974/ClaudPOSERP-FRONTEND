@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { SidebarComponent } from '../../../components/sidebar/sidebar.component';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GetAllSales } from '../../../interfaces/sale';
 import { SpinnerComponent } from '../../../components/spinner/spinner.component';
-import { SaleSevice } from '../../../services/sales/sale.service';
+import { SaleService } from '../../../services/sales/sale.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class SalesComponent implements OnInit {
   listSale:GetAllSales[]=[];
   spinnerVisible:boolean=false;
 
-  constructor(private _salesServise: SaleSevice){}
+  constructor(private _salesServise: SaleService, private router: Router){}
 
   ngOnInit(): void {
     this.getAll()
@@ -65,7 +66,10 @@ search() {
     return idMatch || totalMatch || dateMatch || statusMatch;
   });
 }
-  editSale(item:string){}
+  editSale(item:string){
+
+    this.router.navigate(["/view-sales",item])
+  }
 
 
   }
