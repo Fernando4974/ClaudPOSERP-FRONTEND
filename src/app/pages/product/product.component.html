@@ -7,7 +7,7 @@
     <div>
       <div class="control-content">
         <div class="new-button">
-          <button class="btn btn-success mt-3" (click)="goToNewProduct()">Nuevo</button>
+          <button *appHasRole="'admin'" class="btn btn-success mt-3" (click)="goToNewProduct()">Nuevo</button>
         </div>
 
         <div class="input-group flex-nowrap mt-3">
@@ -53,7 +53,7 @@
             <td>$ {{item.price}}</td>
             <td>* {{item.numberKey}}</td>
             <td>
-              <button (click)="editProduct(item.id)" class="btn btn-warning" title="editar">
+              <button *appHasRole="'admin'" (click)="editProduct(item.id)" class="btn btn-warning" title="editar">
                 <img src="ajustes.png" alt="ico">
               </button>
             </td>

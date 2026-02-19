@@ -9,24 +9,25 @@ import { HttpResponse } from '@angular/common/http';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { PosRegisterComponent } from '../../pages/pos/pos-version/pos-register/pos-register.component';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FormsModule, SpinnerComponent, DashboardComponent, PosRegisterComponent],
+  imports: [CommonModule, NavbarComponent, FormsModule, SpinnerComponent, RecaptchaModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 
 })
 export class LoginComponent {
-
+recaptchaLoading: boolean = true;
   email: string = "";
   password: string = "";
   alertTexto: string = "";
   loading: boolean = false;
-
+  public recaptchaToken: string | null = null
   isDirty: boolean = false;
   constructor(private router: Router, private _userService: UserService) {
 
@@ -43,9 +44,24 @@ export class LoginComponent {
   //FIN metodos por implementar
 
 
+  //RECAPTCHA
+resolved(token: string | null) {
+  this.recaptchaToken = token;
+  this.alertTexto = ""; // Limpiamos alertas si las había
+}
+
+onError(errorDetails: any) {
+  console.error('Error de reCAPTCHA:', errorDetails);
+}
 
   login() {
+
+if (!this.recaptchaToken) {
+    this.alertTexto = "Por favor, completa el reCAPTCHA";
+    return;
+}
     this.loading= true
+
 
 
 
@@ -83,7 +99,8 @@ export class LoginComponent {
 
     const user: UserLogin = {
       email: this.email,
-      password: this.password
+      password: this.password,
+      recaptchaToken:this.recaptchaToken
 
     }
 
@@ -126,6 +143,7 @@ export class LoginComponent {
     } catch (e) {
       alert("An unexpected error occurred");
       console.error(e);
+      this.recaptchaToken = null;
       this.loading = false
     }
 

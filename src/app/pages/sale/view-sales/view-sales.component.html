@@ -92,10 +92,11 @@
         </button>
 
         <button
+        *ngIf="deteleButtonVisible"
           type="button"
           class="btn btn-danger"
           (click)="showModal = true"
-          *ngIf="loading"> Cancelar/Eliminar Venta
+         > Cancelar/Eliminar Venta
         </button>
       </div>
 

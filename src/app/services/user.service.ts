@@ -2,12 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { User, UserLogin } from '../interfaces/user';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+
+  private userSubject = new BehaviorSubject<any>(null);
+  public user$ = this.userSubject.asObservable();
 
   private AppUrl:string;
   private APIUrlRegister:string;
@@ -30,10 +33,40 @@ export class UserService {
     return  this.http.post(`${this.AppUrl}${this.APIUrlRegister}`,user)
 
   }
-
-  Login(user:UserLogin):Observable<any>{
-    return this.http.post(`${this.AppUrl}${this.APIUrlLogin}`,user)
+  Login(user: UserLogin): Observable<any> {
+    return this.http.post(`${this.AppUrl}${this.APIUrlLogin}`, user).pipe(
+      tap((response: any) => {
+        // Guardamos el usuario completo (que trae los roles) en el storage
+        localStorage.setItem('user_data', JSON.stringify(response.userRoles));
+        this.userSubject.next(response.userRoles);
+      })
+    );
   }
+getUserRoles(): string[] {
+  const userData = localStorage.getItem('user_data');
+  console.log(userData)
+  if (!userData) return [];
+
+  try {
+    const response = JSON.parse(userData);
+    // Cambiamos 'roles' por 'userRoles' para que coincida con tu NestJS
+    return response.userRoles || [];
+  } catch (e) {
+    return [];
+  }
+}
+  hasRole(role: string): boolean {
+    const userRole = localStorage.getItem('user_data')!;
+    if (userRole.includes(role)) {
+    return true
+    }
+    return false
+
+  }
+
+  // Login(user:UserLogin):Observable<any>{
+  //   return this.http.post(`${this.AppUrl}${this.APIUrlLogin}`,user)
+  // }
   getUser():Observable<any>{
     return this.http.get(`${this.AppUrl}${this.APIUrlGetUser}`)
 

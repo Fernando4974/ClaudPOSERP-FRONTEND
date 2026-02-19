@@ -30,6 +30,7 @@ export class ViewSalesComponent implements OnInit{
   public showModalExit: boolean = false;
   public alertText: string = '';
   public alertTextOK: string = '';
+  deteleButtonVisible:boolean=true
 
   constructor(
     private route: ActivatedRoute,
@@ -40,6 +41,10 @@ export class ViewSalesComponent implements OnInit{
   ngOnInit(): void {
     // Obtenemos el ID de la URL (ej: /sales/abc-123)
     this.idSale = this.route.snapshot.paramMap.get('id') || '';
+    const userRole=localStorage.getItem('user_data')
+    if (!userRole?.includes('admin')) {
+this.deteleButtonVisible=false
+    }
     if (this.idSale) {
       this.getSaleDetails();
     }

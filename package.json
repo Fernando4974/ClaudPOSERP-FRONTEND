@@ -21,6 +21,7 @@
     "@nestjs/platform-socket.io": "^11.1.12",
     "@nestjs/websockets": "^11.1.12",
     "bootstrap": "^5.3.8",
+    "ng-recaptcha": "^13.2.1",
     "rxjs": "~7.8.0",
     "socket.io-client": "^4.8.3",
     "tslib": "^2.3.0",

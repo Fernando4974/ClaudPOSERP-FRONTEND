@@ -7,6 +7,7 @@ import { ConfirmModalComponentComponent } from '../../components/confirm-modal-c
 import { SpinnerComponent } from '../../components/spinner/spinner.component'; // Ajusta la ruta según tu proyecto
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
+import { HasRoleDirective } from '../../auth/directives/has-role.directive';
 
 @Component({
   selector: 'app-user',
@@ -17,7 +18,8 @@ import { ActivatedRoute } from '@angular/router';
     SidebarComponent,
     NavbarComponent,
     ConfirmModalComponentComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    HasRoleDirective
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
@@ -47,13 +49,22 @@ export class UserComponent implements OnInit {
   dataToSend: any;
   constructor(
     private fb: FormBuilder,
-    private _userService: UserService,
+    public _userService: UserService,
     private route: ActivatedRoute
 ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.loadUserData();
+    const userRole:string = localStorage.getItem('user_data')!;
+    if (!userRole.includes('admin')) {
+    this.userForm.get('roles')?.disable();
+    this.userForm.get('isActive')?.disable();
+    this.userForm.get('membershipStart')?.disable();
+    this.userForm.get('membershipEnd')?.disable();
+    // Incluso puedes deshabilitar todo el formulario si prefieres
+    // this.userForm.disable();
+  }
   }
 
   private initForm(): void {
