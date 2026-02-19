@@ -10,6 +10,7 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { PosRegisterComponent } from '../../pages/pos/pos-version/pos-register/pos-register.component';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { NavBarService } from '../../services/navBar/navBar.service';
 
 
 
@@ -18,10 +19,11 @@ import { RecaptchaModule } from 'ng-recaptcha';
   standalone: true,
   imports: [CommonModule, NavbarComponent, FormsModule, SpinnerComponent, RecaptchaModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  providers:[NavbarComponent]
 
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 recaptchaLoading: boolean = true;
   email: string = "";
   password: string = "";
@@ -29,8 +31,12 @@ recaptchaLoading: boolean = true;
   loading: boolean = false;
   public recaptchaToken: string | null = null
   isDirty: boolean = false;
-  constructor(private router: Router, private _userService: UserService) {
+  verPassword = false;
+  constructor(private router: Router, private _userService: UserService, private _nav: NavBarService) {
 
+  }
+  ngOnInit(): void {
+  this._nav.setExitButtonVisibility(false)
   }
 
   ///metodos por implementar PARA EL CAN DEACTIVATE

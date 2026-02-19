@@ -10,6 +10,7 @@ import { PaginatioDto } from '../../interfaces/pagination.dto';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { UserService } from '../../services/user.service';
 import { HasRoleDirective } from '../../auth/directives/has-role.directive';
+import { NavBarService } from '../../services/navBar/navBar.service';
 
 @Component({
   selector: 'app-product',
@@ -27,7 +28,9 @@ export class ProductComponent implements OnInit {
   pagination: PaginatioDto = { limit: 10, offset: 0 };
   spinner: boolean = false;
 
-  constructor(private productService: ProductService, private router: Router,public userService: UserService) {}
+  constructor(private productService: ProductService, private router: Router,public userService: UserService,public _navService : NavBarService) {
+  this._navService.setExitButtonVisibility(true)
+  }
 
   ngOnInit(): void {
     this.getAll();

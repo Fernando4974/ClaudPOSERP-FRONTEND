@@ -42,19 +42,17 @@ export class UserService {
       })
     );
   }
-getUserRoles(): string[] {
+getUserRoles(): string {
   const userData = localStorage.getItem('user_data');
   console.log(userData)
-  if (!userData) return [];
+  if (!userData) return 'Role Not Found';
 
-  try {
-    const response = JSON.parse(userData);
-    // Cambiamos 'roles' por 'userRoles' para que coincida con tu NestJS
-    return response.userRoles || [];
-  } catch (e) {
-    return [];
+
+    return userData || 'Role Not Found';
+
+
   }
-}
+
   hasRole(role: string): boolean {
     const userRole = localStorage.getItem('user_data')!;
     if (userRole.includes(role)) {

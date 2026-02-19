@@ -100,8 +100,7 @@
             (click)="showModalUpdate = true">
             Actualizar Usuario
           </button>
-<p>Roles actuales: {{ _userService.getUserRoles() | json }}</p>
-<p>¿Es admin?: {{ _userService.hasRole('admin') }}</p>
+
           <button *appHasRole="'admin'"  type="button" class="btn btn-danger px-2 py-2" (click)="showModal = true">
             Eliminar Cuenta
           </button>
