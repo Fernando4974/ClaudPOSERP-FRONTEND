@@ -22,18 +22,34 @@ export class SaleService{
     this.apiDeleteThisSale='sales';
   }
   // sale.service.ts
-createSale(saleData: any): Observable<any> {
-  console.log(this.appUrl,this.apiCreateSale,'/', saleData)
-  return this.http.post(`${this.appUrl}${this.apiCreateSale}`,saleData); // <-- ¡El 'return' es vital!
-}
-getAllSales():Observable<any>{
-  return this.http.get(`${this.appUrl}${this.apiGetAllSales}`)
-}
-getSelectSale(id: string):Observable<Sale>{
-  return this.http.get<Sale>(`${this.appUrl}${this.apiGetThisSale}/${id}`)
-}
-deleteSale(id: string): Observable<any>{
+  createSale(saleData: any): Observable<any> {
+    console.log(saleData)
+    return this.http.post(`${this.appUrl}${this.apiCreateSale}`, saleData);
+  }
 
-  return this.http.delete<Sale>(`${this.appUrl}${this.apiDeleteThisSale}/${id}`)
-}
+  getAllSales(): Observable<any> {
+    return this.http.get(`${this.appUrl}${this.apiGetAllSales}`);
+  }
+
+  getSelectSale(id: string): Observable<Sale> {
+    return this.http.get<Sale>(`${this.appUrl}${this.apiGetThisSale}/${id}`);
+  }
+
+  deleteSale(id: string): Observable<any> {
+    return this.http.delete(`${this.appUrl}${this.apiDeleteThisSale}/${id}`);
+  }
+// createSale(saleData: any): Observable<any> {
+//   console.log(this.appUrl,this.apiCreateSale,'/', saleData)
+//   return this.http.post(`${this.appUrl}${this.apiCreateSale}`,saleData); // <-- ¡El 'return' es vital!
+// }
+// getAllSales():Observable<any>{
+//   return this.http.get(`${this.appUrl}${this.apiGetAllSales}`)
+// }
+// getSelectSale(id: string):Observable<Sale>{
+//   return this.http.get<Sale>(`${this.appUrl}${this.apiGetThisSale}/${id}`)
+// }
+// deleteSale(id: string): Observable<any>{
+
+//   return this.http.delete<Sale>(`${this.appUrl}${this.apiDeleteThisSale}/${id}`)
+// }
 }
