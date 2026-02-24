@@ -61,9 +61,9 @@
                     <td>
                       <span class="badge rounded-pill"
                         [ngClass]="{
-                          'bg-success-subtle text-success': item.status === 'completed',
-                          'bg-info-subtle text-info': item.status === 'pending',
-                          'bg-danger-subtle text-danger': item.status === 'cancelled'
+                          'bg-success-subtle text-success': item.status === 'EFECTIVO',
+                          'bg-info-subtle text-info': item.status === 'CHEQUE',
+                          'bg-danger-subtle text-danger': item.status === 'POR COBRAR'
                         }">
                         {{ item.status }}
                       </span>
