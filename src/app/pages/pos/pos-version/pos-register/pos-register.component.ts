@@ -530,19 +530,21 @@
 //   }, 3000);
 // }
 // }
-import { Component, ElementRef, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewChecked, HostListener } from '@angular/core';
 import { NavbarComponent } from "../../../../components/navbar/navbar.component";
-import { GetAllProduct } from '../../../../interfaces/product';
+import { GetAllProduct, Product } from '../../../../interfaces/product';
 import { ProductService } from '../../../../services/product.service';
 import { SaleService } from '../../../../services/sales/sale.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ZXingScannerModule } from '@zxing/ngx-scanner'
+import { BarcodeFormat } from '@zxing/library';
 
 @Component({
   selector: 'app-pos-register',
   standalone: true,
-  imports: [NavbarComponent, CommonModule, FormsModule],
+  imports: [NavbarComponent, CommonModule, FormsModule, ZXingScannerModule],
   templateUrl: './pos-register.component.html',
   styleUrl: './pos-register.component.css'
 })
@@ -551,6 +553,7 @@ export class PosRegisterComponent implements OnInit {
   listProduct: GetAllProduct[] = [];
   filteredProducts: GetAllProduct[] = [];
   productsMap: { [key: number]: GetAllProduct } = {};
+  productsMapBC: { [key: string]: GetAllProduct } = {};
   carrito: GetAllProduct[] = [];
   selectedProduct: GetAllProduct | null = null;
 
@@ -601,8 +604,10 @@ export class PosRegisterComponent implements OnInit {
   getAllProducts() {
     this._productService.getAllProducts().subscribe({
       next: (data) => {
+
         this.listProduct = data;
         this.assignProductsToButtons();
+        console.log(this.listProduct)
       },
       error: (err) => console.error(err)
     });
@@ -624,36 +629,69 @@ export class PosRegisterComponent implements OnInit {
     return Array.from({ length: 25 }, (_, i) => inicio + i);
   }
 
-  onKeyClick(buttonNumber: number) {
+onKeyClick(buttonNumber: number) {
+  const productoOriginal = this.productsMap[buttonNumber];
 
-    const productoOriginal = this.productsMap[buttonNumber];
-    if (productoOriginal) {
-      const nuevoProducto = { ...productoOriginal };
-
-      if (this.precioTemporal !== null) {
-        nuevoProducto.price = this.precioTemporal;
-        this.precioTemporal = null;
-      }
-
-      const itemExistente = this.carrito.find(item =>
-        item.id === nuevoProducto.id && item.price === nuevoProducto.price
-      );
-
-      if (itemExistente) {
-        itemExistente.count = (itemExistente.count || 1) + 1;
-      } else {
-        nuevoProducto.count = 1;
-        this.carrito = [...this.carrito, nuevoProducto];
-      }
-    }
-        // Al final de tu lógica de onKeyClick
-setTimeout(() => {
-  if (this.myScrollContainer) {
-    const el = this.myScrollContainer.nativeElement;
-    el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+  if (!productoOriginal) {
+    console.log('Product not found');
+    return;
   }
-}, 100);
+
+  const precioAAplicar = this.precioTemporal !== null ? this.precioTemporal : productoOriginal.price;
+  this.precioTemporal = null;
+
+  const itemIndex = this.carrito.findIndex(item =>
+    item.id === productoOriginal.id && item.price === precioAAplicar
+  );
+
+  if (itemIndex > -1) {
+    const nuevoCarrito = [...this.carrito];
+    nuevoCarrito[itemIndex] = {
+      ...nuevoCarrito[itemIndex],
+      count: (nuevoCarrito[itemIndex].count || 0) + 1
+    };
+    this.carrito = nuevoCarrito;
+  } else {
+    const nuevoProducto = { ...productoOriginal, price: precioAAplicar, count: 1 };
+    this.carrito = [...this.carrito, nuevoProducto];
   }
+
+  this.scrollToBottom();
+  this.focusScanner()
+}
+   onBarcodeClick(barcode: string) {
+  const barcodeTrimmed = barcode.trim();
+  const productFound = this.listProduct.find(p => p.barcode === barcodeTrimmed);
+
+  if (!productFound) {
+    console.log('Product not found:', barcodeTrimmed);
+    return;
+  }
+
+  // Creamos la base del producto a añadir
+  const precioAAplicar = this.precioTemporal !== null ? this.precioTemporal : productFound.price;
+  this.precioTemporal = null; // Limpiar inmediatamente
+
+  const itemIndex = this.carrito.findIndex(item =>
+    item.id === productFound.id && item.price === precioAAplicar
+  );
+
+  if (itemIndex > -1) {
+    // IMPORTANTE: Crear un nuevo array y un nuevo objeto para disparar la detección de cambios
+    const nuevoCarrito = [...this.carrito];
+    nuevoCarrito[itemIndex] = {
+      ...nuevoCarrito[itemIndex],
+      count: (nuevoCarrito[itemIndex].count || 0) + 1
+    };
+    this.carrito = nuevoCarrito;
+  } else {
+    // Añadir como nuevo
+    const nuevoProducto = { ...productFound, price: precioAAplicar, count: 1 };
+    this.carrito = [...this.carrito, nuevoProducto];
+  }
+
+  this.scrollToBottom();
+}
 
   // --- TECLADO NUMÉRICO Y BUSQUEDA ---
 
@@ -681,7 +719,8 @@ setTimeout(() => {
     } else {
       this.filteredProducts = this.listProduct.filter(product =>
         product.title.toLowerCase().includes(term) ||
-        product.numberKey?.toString().includes(term)
+        product.numberKey?.toString().includes(term)||
+        product.barcode?.toString().includes(term)
       );
     }
   }
@@ -697,7 +736,10 @@ setTimeout(() => {
     }
   }
 
-  plu() {
+  plu( barcode?: string) {
+    if (barcode) {
+      this.filterTerm = barcode
+    }
     this.mostrarBusqueda = !this.mostrarBusqueda;
     if (this.mostrarBusqueda) {
       this.statusInfo.push('BUSQUEDA');
@@ -1025,6 +1067,47 @@ showHelpModal: boolean = false;
 
 abrirAyuda() {
   this.showHelpModal = true;
+}
+
+
+//BARCODE FUNCTIONS
+
+ @ViewChild('barcodeInput') barcodeInput!: ElementRef<HTMLInputElement>;
+@HostListener('window:keydown', ['$event'])
+handleGlobalKeyDown(event : KeyboardEvent){
+  // Si la búsqueda está abierta, dejamos que el usuario escriba ahí normalmente
+    if (this.mostrarBusqueda) {
+      return;
+    }
+
+    // Si el foco no está ya en el input del scanner, se lo devolvemos
+    // Evitamos interrumpir si el usuario presiona teclas especiales como F12, Alt, etc.
+    if (document.activeElement !== this.barcodeInput.nativeElement && event.key.length === 1) {
+      this.focusScanner();
+    }
+
+}
+// Función auxiliar para dar foco
+  focusScanner() {
+    if (this.barcodeInput) {
+      this.barcodeInput.nativeElement.focus();
+    }
+  }
+onScan(value: string) {
+   console.log(value)
+  if (!value)  return
+  console.log(value)
+  this.onBarcodeClick(value)
+// const productFound= this.listProduct.find(p => p.barcode === value)
+// if (productFound){
+//   this.carrito.push( productFound )
+//   console.log('Producto añadito al carrito' , productFound)
+// }else{
+//   console.log('producto no encontrado')
+//   return
+// }
+
+
 }
 
 

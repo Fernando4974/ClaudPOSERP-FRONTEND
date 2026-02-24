@@ -131,6 +131,12 @@ console.log(data)
       this.ejecutarCreacion(productToSend)
     }
   }
+  onScan(value: string) {
+  if (value) {
+    console.log('Enviando a NestJS:', value);
+    // Lógica para enviar al backend
+  }
+}
 
 ejecutarCreacion(productToSend: newProduct) {
   this._serviceProduct.createProduct(productToSend, this.selectedFile).subscribe({

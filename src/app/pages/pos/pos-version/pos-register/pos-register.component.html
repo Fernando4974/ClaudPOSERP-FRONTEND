@@ -18,8 +18,10 @@
     @for (item of carrito; track $index) {
       <p>
         {{ item.title }} <span>x{{ item.count }}</span>
-        <span class="pU">${{ item.price }} &nbsp;</span>
-        ${{ (item.price! * (item.count || 1)) }}
+
+        <span class="pU">${{ item.price }} </span>&nbsp;
+
+        $ <span> {{ (item.price! * (item.count || 1)) }}</span>
       </p>
     }
 
@@ -68,8 +70,8 @@
         @for (item of carrito; track $index) {
           <div class="order-item" style="border-bottom: 1px solid #333; padding: 5px 0;">
             <span class="item-name">{{ item.title }}</span>
-            <span class="item-count">x {{ item.count }}</span>
-            <span class="item-price" style="float: right;">${{ item.price! * (item.count || 1) }}</span>
+            <span class="item-count">x{{ item.count }} &nbsp;</span>
+            <span class="item-price" style="float: right;"> ${{ item.price! * (item.count || 1) }}</span>
             <div style="clear: both;"></div>
           </div>
         } @empty {
@@ -190,7 +192,7 @@
           [style.background-color]="mostrarBusqueda ? '#6e6b6b' : '#e67e22'"
           (click)="plu()"
         >
-          {{ mostrarBusqueda ? "VOLVER " : "PLU " }}
+          {{ mostrarBusqueda ? "PLU " : "PLU " }}
 
 
 
@@ -359,6 +361,13 @@
           >
             SUBTOTAL
           </button>
+          <input #barcodeInput
+        style="position: absolute; left: -1000vw;"
+       (keydown.enter)="$event.preventDefault()"
+       (keyup.enter)="onScan(barcodeInput.value); barcodeInput.value = ''"
+       (blur)="focusScanner()"
+       autofocus>
+
 
           <!-- Boton total -->
 
@@ -440,6 +449,7 @@
       <div class="modal-footer">
         <button class="btn-ok" (click)="showHelpModal = false">CERRAR MANUAL</button>
       </div>
+
 
     </div>
   </div>

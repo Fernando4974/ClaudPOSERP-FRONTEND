@@ -81,7 +81,17 @@
               <label class="field-label mb-1">Codigo de barras</label>
               <div class="input-group">
                 <span class="input-group-text bg-transparent border-0 border-bottom">#</span>
-                <input formControlName="barcode" type="text" class="form-control field-value-price w-auto">
+                <input
+                #barcodeInput
+                formControlName="barcode"
+                type="text"
+                class="form-control field-value-price w-auto"
+                 (keydown.enter)="$event.preventDefault()"
+                 (keyup.enter)="onScan(barcodeInput.value)"
+
+       >
+
+
               </div>
             </div>
           </div>
