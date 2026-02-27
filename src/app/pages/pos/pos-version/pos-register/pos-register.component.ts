@@ -1,535 +1,4 @@
-// import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-// import { NavbarComponent } from "../../../../components/navbar/navbar.component";
-// import { GetAllProduct } from '../../../../interfaces/product';
-// import { ProductService } from '../../../../services/product.service';
-// import { count, timeout } from 'rxjs';
-// import { SaleService } from '../../../../services/sales/sale.service';
-// import { CommonModule, NgFor } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
 
-// @Component({
-//   selector: 'app-pos-register',
-//   standalone: true,
-//   imports: [NavbarComponent, CommonModule, FormsModule],
-//   templateUrl: './pos-register.component.html',
-//   styleUrl: './pos-register.component.css'
-// })
-// export class PosRegisterComponent implements OnInit {
-//   listProduct:GetAllProduct[] = [];
-//   filteredProducts: GetAllProduct[] = [];
-//   filterTerm:string=''
-//   selectedProduct: GetAllProduct | null = null
-//   buttons: number[] = Array.from({ length: 25 }, (_, i) => i + 1);
-//   carrito: GetAllProduct[] = [];
-//   iva:number=0
-
-//   //extistProduct:id
-
-
-//   constructor(
-//     private _productService: ProductService,
-//    private _saleService : SaleService
-//   ){}
-//    ngOnInit(): void {
-//      //console.log(this.listProduct)
-//   this.getAllProducts()
-
-//   }
-//   @ViewChild('scrollContainer') private myScrollContainer!: ElementRef;
-
-// // Este método se ejecuta cada vez que Angular detecta cambios en la vista
-// ngAfterViewChecked() {
-//     this.scrollToBottom();
-// }
-
-// scrollToBottom(): void {
-//     try {
-//         this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
-//     } catch(err) { }
-// }
-// getAllProducts(){
-//      this._productService.getAllProducts().subscribe({
-//       next:(data)=>{
-
-
-
-//         this.listProduct = data;
-//          //console.log(this.listProduct)
-//         this.assignProductsToButtons()
-
-
-//       },
-//       error:(err)=> {
-//         console.log(err)
-
-//       },
-//     })
-//   }
-// productsMap: { [key: number]: GetAllProduct } = {};
-
-
-
-// assignProductsToButtons() {
-//   console.log('Iniciando asignación...');
-
-//   this.listProduct.forEach((product) => {
-//     // Extraemos el keyNumber del objeto actual
-//     const posicion = product.numberKey!;
-
-//     // Validamos que el keyNumber esté en el rango de tus botones (1 al 25)
-//     if (posicion >= 1 && posicion <= 25) {
-//       // Usamos el keyNumber como la llave del mapa
-//       this.productsMap[posicion] = product;
-
-//       //console.log(`Asignado: ${product.title} al botón ${posicion}`);
-//     }
-//   });
-
-//   console.log('Mapa final de productos:', this.productsMap);
-// }
-// onKeyClick(buttonNumber: number) {
-//   const productoOriginal = this.productsMap[buttonNumber];
-
-//   if (productoOriginal) {
-//     // Creamos una copia del producto para no alterar el precio original en la base de datos
-//     const nuevoProducto = { ...productoOriginal };
-
-//     // Si hay un precio manual pendiente, lo aplicamos
-//     if (this.precioTemporal !== null) {
-//       nuevoProducto.price = this.precioTemporal;
-//       this.precioTemporal = null; // Reseteamos para la siguiente venta
-//     }
-
-//     const productInCarrito = this.carrito.find(item =>
-//       item.id === nuevoProducto.id && item.price === nuevoProducto.price
-//     );
-
-//     if (productInCarrito) {
-//       productInCarrito.count = (productInCarrito.count || 1) + 1;
-//     } else {
-//       nuevoProducto.count = 1;
-//       this.carrito = [...this.carrito, nuevoProducto];
-//     }
-//   }
-// }
-// // onKeyClick(buttonNumber: number) {
-// //   const producto = this.productsMap[buttonNumber];
-
-// //   if (producto) {
-// //     const productInCarrito= this.carrito.find(item=> item.title == producto.title)
-// //     if (productInCarrito) {
-
-// //       productInCarrito.count= (productInCarrito.count || 1) +1;
-
-
-
-
-// //     }else{
-
-// //    // if ()
-// //     this.selectedProduct = producto;
-// //     this.selectedProduct.count=1;
-// //     // Usamos el operador spread para que Angular detecte el cambio fácilmente
-// //     this.carrito = [...this.carrito, producto ];
-// //   }
-// // }
-// // }
-// calcularTotal(): number {
-//   return this.carrito.reduce((acc, p) => (acc + p.price * (p.count || 1 )) , 0);
-// }
-
-//  showTicket: boolean = false;
-// imprimirRecibo(){
-//   if (this.carrito.length>0) {
-//     this.showTicket = true
-
-
-//   }
-
-
-// }
-// get subtotal(): number {
-//     return this.carrito.reduce((acc, item) => acc + item.price, 0);
-//   }
-//   calcularIva(): number{
-//     const total = this.calcularTotal()
-//      this.iva = Math.round( total * 0.12)
-//     return this.iva
-//   }
-//   calcularTotalMasIva():number {
-
-//     return this.calcularTotal() + this.calcularIva()
-
-//   }
-//  // Añade esta variable para guardar la venta procesada
-// ventaFinalizada: any = null;
-
-// // pos-register.component.ts
-
-
-// ultimaVentaId: string | null = null;
-// crearVenta() {
-//   console.log('CAMT CV')
-//   if (this.carrito.length === 0) return;
-
-//   // 1. Mapeamos el carrito al DTO que espera NestJS
-//   const nuevaVenta = {
-//     total: this.calcularTotalMasIva(),
-//     iva: this.iva,
-//     status: 'completed',
-//     items: this.carrito.map(producto => ({
-//       productId: producto.id,
-//       title:producto.title, // ID del producto en DB
-//       quantity: producto.count || 1,
-//       priceAtSale: producto.price
-//     }))
-//   };
-
-//   // 2. Llamada al servicio
-//   this._saleService.createSale(nuevaVenta).subscribe({
-//     next: (res) => {
-//       this.ventaFinalizada = res; // Guardamos datos del servidor (ID, fecha)
-//       this.showTicket = true;     // Mostramos el recibo en la pantalla de simulación
-//       this.ultimaVentaId = res.id;
-
-//       // 3. Disparamos la impresión real
-//       setTimeout(() => {
-//         if (this.receiptFlag) {
-//       window.print(); // Dispara el diálogo de impresión del sistema
-//   }else{
-//   console.log('RECEIPT off')
-// }
-//   this.limpiarCarrito()
-//       }, 500);
-//     },
-//     error: (err) => {
-//       console.error('Error al procesar venta:', err);
-//       alert('Error en el servidor al guardar la venta');
-//     }
-//   });
-// }
-// postReceipt() {
-//   if (!this.ultimaVentaId) {
-//     alert("No hay transacciones recientes para imprimir.");
-//     return;
-//   }
-
-//   // Si ya tenemos los datos en 'ventaFinalizada', solo mostramos e imprimimos
-//   // Si no, los pedimos al servicio:
-//   this._saleService.getSelectSale(this.ultimaVentaId).subscribe({
-//     next: (sale) => {
-//       // Cargamos el carrito con los items de la venta recuperada para que se vea en el HTML
-//       this.carrito = sale.items.map(item => ({
-//         id: item.productId,
-//         title: item.title,
-//         price: item.priceAtSale,
-//         count: item.quantity
-//       })) as any;
-
-//       this.showTicket = true;
-
-//       // Disparar impresión manual ignorando momentáneamente la bandera de Receipt
-//       // (Porque POST es una acción de impresión explícita)
-//       setTimeout(() => {
-//         if (this.receiptFlag) {
-//           window.print();
-//         }
-
-//         // Opcional: limpiar después de imprimir el post-recibo
-//         // this.limpiarCarrito();
-//       }, 300);
-//     },
-//     error: (err) => console.error("Error al recuperar post-recibo", err)
-//   });
-// }
-
-// // En tu componente
-// mostrarBusqueda: boolean = false; // Por defecto mostramos el detalle de venta
-
-
-// search() {
-//   // Usamos el operador de encadenamiento opcional por si filterTerm es null
-//   const term = (this.filterTerm || '').toLowerCase().trim();
-
-//   if (!term) {
-//     this.filteredProducts = [...this.listProduct];
-//   } else {
-//     this.filteredProducts = this.listProduct.filter(product =>
-//       product.title.toLowerCase().includes(term) ||
-//       (product.description && product.description.toLowerCase().includes(term)) ||
-//       product.numberKey?.toString().includes(term)
-//     );
-//   }
-// }
-
-
-// appendNumber(value: any) {
-//   console.log('Botón presionado:', value); // Agrega este log para ver si el clic llega
-
-//   if (this.mostrarBusqueda) {
-//     this.filterTerm += value; // Concatenamos el número
-//     this.search();            // Ejecutamos el filtro inmediatamente
-//   } else {
-//     console.warn('Modo búsqueda no activo. Presiona SHIFT primero.');
-//   }
-// }
-
-// // Opcional: Modificar deleteLastOne para que también funcione con el buscador
-// deleteLastOne() {
-//   if (this.mostrarBusqueda && this.filterTerm) {
-//     this.filterTerm = this.filterTerm.slice(0, -1);
-//     this.search();
-//   } else {
-
-//   if (this.carrito.length > 0) {
-//    this.carrito.pop()
-//    this.selectedProduct=this.carrito.length > 0 ? this.carrito[this.carrito.length - 1] : null
-//   }
-
-
-//   }
-// }
-// agregarAlCarrito(product: any) {
-//   // 1. Buscamos si el producto ya está en el carrito
-//   const itemExistente= this.carrito.find(item => item.id === product.id);
-
-//   if (itemExistente) {
-//     // 2. Si existe, aumentamos el contador
-//     itemExistente.count = (itemExistente.count || 0) + 1;
-//   } else {
-//     // 3. Si no existe, lo agregamos con count = 1
-//     // Usamos el spread operator (...) para no modificar el objeto original
-//     this.carrito.push({
-//       ...product,
-//       count: 1
-//     });
-//   }
-
-//   // OPCIONAL: Volver a la vista del detalle automáticamente tras agregar
-//   // this.mostrarBusqueda = false;
-
-//   console.log('Producto agregado:', product.title);
-// }
-// statusInfo: string[] =[]
-// receiptFlag: boolean= true
-// receipString ='No Imprimir'
-// receipt() {
-//     if (this.receiptFlag) {
-//         // ACTIVAR: Cambiamos a true y agregamos el indicador visual
-//         this.receiptFlag = false;
-//         this.statusInfo.push(this.receipString);
-//     } else {
-//         // DESACTIVAR: Cambiamos a false y removemos el indicador del array
-//         this.receiptFlag = true;
-//         this.statusInfo = this.statusInfo.filter(status => status !== this.receipString);
-//     }
-// }
-// imprimirFactura() {
-//   console.log('CAMT button IP')
-//   console.log(this.receiptFlag)
-
-
-// }
-
-// feedLines: number[] = [];
-// limpiarCarrito() {
-//   this.carrito = [];
-//   this.feedLines=[]
-//   this.selectedProduct = null;
-//   this.showTicket = false;
-// }
-// // Define esta variable al inicio de tu clase
-
-
-// feed() {
-//   this.showTicket = true;
-//   // Agregamos un elemento al arreglo cada vez que presionas FEED
-//   this.feedLines.push(Date.now());
-//   console.log('button feed')
-// }
-
-// dateString=Date().toLocaleLowerCase().slice(0,25)
-// dateFlag: boolean = true
-// date(){
-//   if (!this.dateFlag) {
-//     this.dateFlag=true
-//     this. statusInfo = this.statusInfo.filter(status => status !== this.dateString)
-
-//   }else{
-//     this.dateFlag=false
-//     this.statusInfo.push(this.dateString)
-//   }
-// }
-// openString: string = "Cajon Abierto"
-// openFlag:boolean = false
-// open(){
-//   if (this.openFlag) {
-//     this.statusInfo = this.statusInfo.filter(status => status !== this.openString)
-//     this.openFlag=false
-
-//   }else{
-//     this.statusInfo.push(this.openString)
-//     this.openFlag=true
-
-//   }
-
-// }
-// ns(){
-// const mensajeRS = 'SE RECIBIO EFECTIVO EN CAJA';
-
-//   // 1. Agregamos el mensaje al arreglo de estados
-//   if (!this.statusInfo.includes(mensajeRS)) {
-//     this.statusInfo.push(mensajeRS);
-//   }
-
-//   // 2. Programamos la desaparición tras 5000ms (5 segundos)
-//   setTimeout(() => {
-//     this.statusInfo = this.statusInfo.filter(status => status !== mensajeRS);
-//   }, 5000);
-
-
-// }
-// rs() {
-//   const mensajeRS = 'SE RECIBIO EFECTIVO EN CAJA';
-
-//   // 1. Agregamos el mensaje al arreglo de estados
-//   if (!this.statusInfo.includes(mensajeRS)) {
-//     this.statusInfo.push(mensajeRS);
-//   }
-
-//   // 2. Programamos la desaparición tras 5000ms (5 segundos)
-//   setTimeout(() => {
-//     this.statusInfo = this.statusInfo.filter(status => status !== mensajeRS);
-//   }, 5000);
-// }
-// // Variable para guardar el precio manual antes de asignar el producto
-// precioTemporal: number | null = null;
-
-// price() {
-//   // Convertimos el valor del buscador (filterTerm) a número
-//   const valorIngresado = parseFloat(this.filterTerm);
-
-//   if (!isNaN(valorIngresado) && valorIngresado > 0) {
-//     this.precioTemporal = valorIngresado;
-
-//     // Mostramos feedback en el status
-//     const mensaje = `PRECIO MANUAL: $${this.precioTemporal}`;
-//     this.statusInfo.push(mensaje);
-
-//     // Limpiamos el buscador para que el usuario elija el producto
-//     this.filterTerm = '';
-
-//     // Opcional: desaparece el mensaje del status tras 3 segundos
-//     setTimeout(() => {
-//       this.statusInfo = this.statusInfo.filter(s => s !== mensaje);
-//     }, 3000);
-
-//   } else {
-//     alert("Primero escribe el precio usando los números.");
-//   }
-// }
-// cancel(){
-//   this.carrito=[]
-// }
-// // Define esta variable en tu clase
-// isShiftActive: boolean = false;
-
-// // Este getter generará los números automáticamente según el estado de isShiftActive
-// get visibleButtons(): number[] {
-//   const inicio = this.isShiftActive ? 26 : 1;
-//   return Array.from({ length: 25 }, (_, i) => inicio + i);
-// }
-// // Modificamos el toggleShift que ya tenías o creamos uno nuevo para esta lógica
-// toggleShift() {
-//   // Cambia el estado (de true a false y viceversa)
-//   this.isShiftActive = !this.isShiftActive;
-
-//   // Actualiza el statusInfo para que el cajero sepa que el nivel 2 está activo
-//   if (this.isShiftActive) {
-//     if (!this.statusInfo.includes('SHIFT')) {
-//       this.statusInfo.push('SHIFT');
-//     }
-//   } else {
-//     this.statusInfo = this.statusInfo.filter(s => s !== 'SHIFT');
-//   }
-// }
-// // toggleShift() {
-// //   console.log('shift presonado')
-// //   this.mostrarBusqueda = !this.mostrarBusqueda;
-
-// //   // Si activamos la búsqueda, nos aseguramos de que la lista filtrada esté llena
-// //   if (this.mostrarBusqueda) {
-// //     this.filteredProducts = [...this.listProduct];
-// //   }
-// // }
-
-// // Variables necesarias en tu clase
-// // Variables de apoyo
-// cajeroActual: number = 1;
-
-// // 1. Función MENOS (-): Deducción de valor fijo
-// teclaMenos() {
-//   // Convertimos lo que esté escrito en el buscador a número
-//   const montoDeduccion = parseFloat(this.filterTerm);
-
-//   if (!isNaN(montoDeduccion) && this.carrito.length > 0) {
-//     // Aplicamos al último artículo del carrito
-//     const ultimoItem = this.carrito[this.carrito.length - 1];
-
-//     // Restamos el monto (asegurando que el precio no sea menor a 0)
-//     const nuevoPrecio = ultimoItem.price - montoDeduccion;
-//     ultimoItem.price = nuevoPrecio < 0 ? 0 : nuevoPrecio;
-
-//     this.statusInfo.push(`DEDUCCION: -$${montoDeduccion.toFixed(2)}`);
-//     this.filterTerm = ''; // Limpiamos el buscador tras aplicar
-//   } else {
-//     this.mostrarMensajeTemporal('ERROR: INGRESE MONTO O CARRITO VACIO');
-//   }
-// }
-
-// // 2. Función %- : Descuento porcentual
-// teclaPorcentaje() {
-//   const porcentaje = parseFloat(this.filterTerm);
-
-//   if (!isNaN(porcentaje) && this.carrito.length > 0) {
-//     const ultimoItem = this.carrito[this.carrito.length - 1];
-
-//     // Calculamos cuánto representa ese % del precio actual
-//     const descuento = (ultimoItem.price * porcentaje) / 100;
-//     ultimoItem.price -= descuento;
-
-//     this.statusInfo.push(`DESC: -${porcentaje}% (-$${descuento.toFixed(2)})`);
-//     this.filterTerm = '';
-//   } else {
-//     this.mostrarMensajeTemporal('ERROR: INGRESE %');
-//   }
-// }
-
-// // 3. Función CLK#: Identificar Cajero
-// teclaClerk() {
-//   const idCajero = parseInt(this.filterTerm);
-
-//   if (!isNaN(idCajero)) {
-//     this.cajeroActual = idCajero;
-//   }
-
-//   const mensaje = `CAJERO ${this.cajeroActual} ACTIVO`;
-//   this.statusInfo.push(mensaje);
-//   this.filterTerm = '';
-
-//   setTimeout(() => {
-//     this.statusInfo = this.statusInfo.filter(s => s !== mensaje);
-//   }, 3000);
-// }
-
-// // Función auxiliar para errores rápidos en el status
-// mostrarMensajeTemporal(msg: string) {
-//   this.statusInfo.push(msg);
-//   setTimeout(() => {
-//     this.statusInfo = this.statusInfo.filter(s => s !== msg);
-//   }, 3000);
-// }
-// }
 import { Component, ElementRef, OnInit, ViewChild, AfterViewChecked, HostListener } from '@angular/core';
 import { NavbarComponent } from "../../../../components/navbar/navbar.component";
 import { GetAllProduct, Product } from '../../../../interfaces/product';
@@ -569,6 +38,7 @@ export class PosRegisterComponent implements OnInit {
   receiptFlag: boolean = true;
   dateFlag: boolean = true;
   openFlag: boolean = false;
+  isModalOpen: boolean = false;
 
   // Variables de Cálculos
   iva: number = 0;
@@ -593,21 +63,57 @@ export class PosRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllProducts();
+    // Dentro de ngOnInit
+const modalElement = document.getElementById('modalPassword');
+modalElement?.addEventListener('hidden.bs.modal', () => {
+  this.isModalOpen = false;
+});
   }
 
   // ngAfterViewChecked() {
   //   this.scrollToBottom();
   // }
+ // CIERRE DE CAJA
+mostrarReporte: boolean = false;
+ventasDelDia: any[] = [];
+
+// El botón ON debe poner esto en FALSE para volver a la venta
+irAModoVenta() {
+  this.mostrarReporte = false;   // Apaga reporte
+  this.mostrarBusqueda = false; // Opcional: apaga búsqueda también si quieres ir directo al detalle
+}
+// El botón X/Z debe poner esto en TRUE para mostrar el reporte
+getTotalCaja() {
+  this._saleService.getSalesDay().subscribe({
+    next: (data) => {
+      this.ventasDelDia = data;
+      this.mostrarBusqueda= false;
+
+      this.mostrarReporte = true; // <--- AGREGAR ESTO para que cambie la pantalla
+      console.log('Total Caja:', data);
+    },
+    error: (err) => {
+      console.error('Error al obtener total de caja:', err);
+    }
+  });
+}
+
+calcularTotalVentas(): number {
+  if (!this.ventasDelDia || this.ventasDelDia.length === 0) return 0;
+  return this.ventasDelDia.reduce((acc, sale) => {
+    const monto = parseFloat(sale.total) || 0;
+    return acc + monto;
+  }, 0);
+}
+
 
   // --- LÓGICA DE PRODUCTOS ---
 
   getAllProducts() {
     this._productService.getAllProducts().subscribe({
       next: (data) => {
-
         this.listProduct = data;
         this.assignProductsToButtons();
-        console.log(this.listProduct)
       },
       error: (err) => console.error(err)
     });
@@ -702,15 +208,82 @@ onKeyClick(buttonNumber: number) {
     }
   }
 
-  deleteLastOne() {
-    if (this.filterTerm.length > 0) {
-      this.filterTerm = this.filterTerm.slice(0, -1);
-      if (this.mostrarBusqueda) this.search();
-    } else if (this.carrito.length > 0) {
-      this.carrito.pop();
-      this.selectedProduct = this.carrito.length > 0 ? this.carrito[this.carrito.length - 1] : null;
-    }
+  // deleteLastOne() {
+  //   if (this.filterTerm.length > 0) {
+  //     this.filterTerm = this.filterTerm.slice(0, -1);
+  //     if (this.mostrarBusqueda) this.search();
+  //   } else if (this.carrito.length > 0) {
+  //     this.carrito.pop();
+  //     this.selectedProduct = this.carrito.length > 0 ? this.carrito[this.carrito.length - 1] : null;
+  //   }
+  // }
+  // Variables nuevas
+passwordAdmin: string = '';
+passwordCorrecta: string = '1234'; // Aquí pones tu clave de gerente
+
+// Modificamos el método original para que solo prepare el terreno
+confirmarBorrado() {
+  // Si no hay nada que borrar, no pedimos clave
+  if (this.filterTerm.length === 0 && this.carrito.length === 0) return;
+
+  // Si es solo borrar texto del buscador, lo permitimos sin clave
+  if (this.filterTerm.length > 0) {
+    this.ejecutarBorradoReal();
+    return;
   }
+
+  // Si es borrar un producto del carrito, abrimos el modal
+  const modalElement = document.getElementById('modalPassword');
+  if (modalElement) {
+    this.isModalOpen = true;
+    const modal = new (window as any).bootstrap.Modal(modalElement);
+    this.passwordAdmin = ''; // Limpiamos el input
+    modal.show();
+    setTimeout(() => {
+       const input = document.querySelector('#modalPassword input') as HTMLElement;
+       input?.focus();
+    }, 500);
+
+  }
+}
+
+// El método que realmente hace el trabajo
+ejecutarBorradoReal() {
+  if (this.filterTerm.length > 0) {
+    this.filterTerm = this.filterTerm.slice(0, -1);
+    if (this.mostrarBusqueda) this.search();
+  } else if (this.carrito.length > 0) {
+    this.carrito.pop();
+    this.selectedProduct = this.carrito.length > 0 ? this.carrito[this.carrito.length - 1] : null;
+  }
+}
+
+// Validación de la clave
+validarYBorrar() {
+
+  this._saleService.getAdminPassword(this.passwordAdmin).subscribe({
+    next: (res) => {
+      if (res) {
+        console.log('Contraseña correcta. Procediendo a borrar...');
+          this.ejecutarBorradoReal();
+
+
+    const modalElement = document.getElementById('modalPassword');
+    const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+    modal.hide();
+    this.isModalOpen = false;
+  } else {
+    alert('Contraseña incorrecta. Acción denegada.');
+    this.passwordAdmin = '';
+  }
+},
+
+    error: (res) => {
+  console.log(res)
+}
+  });
+}
+
 
   search() {
     const term = (this.filterTerm || '').toLowerCase().trim();
@@ -725,7 +298,7 @@ onKeyClick(buttonNumber: number) {
     }
   }
 
-  // --- FUNCIONES ESPECIALES (BOTONES) ---
+  // --- FUNCIONES ESPECIALES ---
 
   toggleShift() {
     this.isShiftActive = !this.isShiftActive;
@@ -1079,6 +652,9 @@ handleGlobalKeyDown(event : KeyboardEvent){
     if (this.mostrarBusqueda) {
       return;
     }
+    if (this.isModalOpen) {
+    return;
+  }
 
     // Si el foco no está ya en el input del scanner, se lo devolvemos
     // Evitamos interrumpir si el usuario presiona teclas especiales como F12, Alt, etc.
@@ -1111,4 +687,74 @@ onScan(value: string) {
 }
 
 
+
+  // ✅ SIN la palabra "function"
+  setAngle(deg: number): void {
+    const sw = document.getElementById('main-switch') as HTMLElement | null;
+    if (sw) {
+      sw.style.setProperty('--angle', `${deg}deg`);
+    }
+  }
+
+  imprimirReporteCaja() {
+  const fecha = new Date().toLocaleDateString();
+  const hora = new Date().toLocaleTimeString();
+  const totalCaja = this.calcularTotalVentas().toFixed(2);
+
+  // Creamos el contenido de las filas dinámicamente
+  const filasVentas = this.ventasDelDia.map(v => `
+    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 5px 0; font-size: 12px;">
+      <span>#${v.id} - ${v.status}</span>
+      <span>$${v.total}</span>
+      <span>${new Date(v.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+    </div>
+  `).join('');
+
+  // Creamos una ventana temporal
+  const ventanaImpresion = window.open('', '_blank');
+
+  ventanaImpresion?.document.write(`
+    <html>
+      <head>
+        <title>Reporte de Caja - ${fecha}</title>
+        <style>
+          body { font-family: 'Courier New', Courier, monospace; width: 80mm; margin: 0; padding: 10px; }
+          h2 { text-align: center; margin-bottom: 5px; font-size: 16px; }
+          .header { text-align: center; margin-bottom: 15px; font-size: 12px; border-bottom: 2px solid #000; padding-bottom: 5px; }
+          .total { margin-top: 15px; border-top: 2px solid #000; padding-top: 10px; text-align: right; font-size: 16px; font-weight: bold; }
+          .footer { margin-top: 20px; text-align: center; font-size: 10px; }
+        </style>
+      </head>
+      <body>
+        <h2>REPORTE DE CAJA</h2>
+        <div class="header">
+          Fecha: ${fecha}<br>
+          Hora: ${hora}<br>
+          Ventas totales: ${this.ventasDelDia.length}
+        </div>
+        <div class="items">
+          ${filasVentas}
+        </div>
+        <div class="total">
+          TOTAL DÍA: $${totalCaja}
+        </div>
+        <div class="footer">
+          -- Fin del Reporte --
+        </div>
+      </body>
+    </html>
+  `);
+
+  ventanaImpresion?.document.close();
+  ventanaImpresion?.focus();
+
+  // Pequeño delay para asegurar que los estilos carguen antes de imprimir
+  setTimeout(() => {
+    ventanaImpresion?.print();
+    ventanaImpresion?.close();
+  }, 250);
 }
+
+}
+
+

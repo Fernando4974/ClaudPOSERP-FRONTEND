@@ -109,85 +109,106 @@
     margin-top: 10px;
 }
 
-.rotary-switch-container {
-    grid-column: 3 / 4;
-    grid-row: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .rotary-switch {
-    width: 130px;
-    height: 130px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
-    background-color: #555;
-    border: 4px solid #222;
+    background-color: #444;
+    border: 6px solid #222;
     position: relative;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
+    /* Variable para controlar la rotación */
+    --angle: 0deg;
+    transition: transform 0.3s ease-in-out;
 }
 
+/* El indicador (La raya roja que gira) */
+.rotary-switch::after {
+    content: '';
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    /* El punto de origen es el centro del círculo */
+    transform-origin: center center;
+    /* La raya se posiciona y gira según la variable --angle */
+    transform: translate(-50%, -100%) rotate(var(--angle));
+    width: 8px;
+    height: 40px; /* Un poco más larga para que se note */
+    background-color: #ff0000;
+    border-radius: 4px;
+    z-index: 1;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Estilo de los botones */
+.rotary-switch .btn {
+    position: absolute;
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    z-index: 10;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.rotary-switch {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #444;
+    border: 6px solid #222;
+    position: relative;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
+    --angle: 0deg;
+}
+
+/* El indicador en forma de flecha */
+.rotary-switch::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    /* El origen de rotación es el centro del switch */
+    /* Usamos bottom center para que la base de la flecha esté en el centro */
+    transform-origin: bottom center;
+    transform: translate(-50%, -100%) rotate(var(--angle));
+
+    /* Dimensiones de la flecha */
+    width: 14px;  /* Un poco más ancha para que se vea la forma */
+    height: 50px; /* Un poco más larga */
+    background-color: #ff0000;
+    z-index: 5;
+
+    /* EFECTO FLECHA: Recorta el rectángulo en forma de punta */
+    /* Los puntos definen: Base izquierda, Punta, Base derecha */
+    clip-path: polygon(50% 0%, 100% 40%, 70% 40%, 70% 100%, 30% 100%, 30% 40%, 0% 40%);
+
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Opcional: El centro negro para tapar la base de la flecha y que se vea más limpio */
 .rotary-switch::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    background-color: #161515;
+    width: 25px;
+    height: 25px;
+    background-color: #111;
     border-radius: 50%;
+    z-index: 6; /* Por encima de la flecha */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
-.rotary-switch::after {
-    content: '';
-    position: absolute;
-    top: 25px;
-    left: calc(50% - 3px);
-    width: 6px;
-    height: 22px;
-    background-color: var(--key-red);
-    border-radius: 2px;
-}
-
-.rotary-switch .label {
-    position: absolute;
-    font-size: 0.7rem;
-    font-weight: bold;
-    color: var(--text-light);
-}
-
-.reg {
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.x {
-    top: 35px;
-    right: 10px;
-}
-
-.z {
-    bottom: 35px;
-    right: 10px;
-}
-
-.pgm-l {
-    bottom: 10px;
-    left: 35px;
-}
-
-.pgm-r {
-    bottom: 10px;
-    right: 35px;
-}
-
-.off {
-    top: 35px;
-    left: 10px;
-}
-
+/* Posiciones exactas */
+.btn-on  { top: 10%; left: 50%; transform: translateX(-50%); }
+.btn-x   { top: 40%; left: 10%; }
+.btn-z   { top: 40%; right: 10%; }
+.btn-off { bottom: 10%; left: 50%; transform: translateX(-50%); }
 /* === TECLADO === */
 /* .cash-register {
     grid-column: 1 / span 3;

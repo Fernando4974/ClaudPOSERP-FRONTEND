@@ -38,6 +38,13 @@ export class SaleService{
   deleteSale(id: string): Observable<any> {
     return this.http.delete(`${this.appUrl}${this.apiDeleteThisSale}/${id}`);
   }
+  getSalesDay(): Observable<any> {
+    return this.http.get(`${this.appUrl}sales/sales-day`);
+  }
+  // En tu sale.service.ts (o el servicio que prefieras)
+  getAdminPassword(password: string): Observable<any> {
+  return this.http.post(`${this.appUrl}auth/validate-admin-password`, { password });
+}
 // createSale(saleData: any): Observable<any> {
 //   console.log(this.appUrl,this.apiCreateSale,'/', saleData)
 //   return this.http.post(`${this.appUrl}${this.apiCreateSale}`,saleData); // <-- ¡El 'return' es vital!
