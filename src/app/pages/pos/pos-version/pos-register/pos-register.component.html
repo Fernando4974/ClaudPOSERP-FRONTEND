@@ -1,182 +1,603 @@
-
-
-
 <div class="body">
+  <div class="pos-simulation-container">
+    <!-- pantalla recibo -->
 
-    <div class="pos-simulation-container">
-      <!-- pantalla recibo -->
-        <div class="receipt-area">
-            <h6><strong>Articulo. Can. Precio Unit. Subtotal.</strong></h6>
-            @if (showTicket===true) {
-            @for (item of carrito; track $index) {
-            <p>{{item.title}} <span>{{item.count}}</span><span>${{item.price}} &nbsp;</span> {{item.price! * (item.count || 1)}}<span></span></p>
-            }
+    <div class="receipt-area" id="printable-receipt">
+      <h6>
+        <strong class="head">Articulo. Can. Precio Unit. Subtotal.</strong>
+      </h6>
 
-            <hr>
-            <p>SUBTOTAL <span>$&nbsp;{{calcularTotal()}}</span></p>
-            <p>Impuesto (IVA 12%) <span>$&nbsp; {{calcularIva()}}</span></p>
-            <hr>
-            <p class="total">TOTAL <span>$&nbsp;{{calcularTotalMasIva()}}</span></p>
+      @if (showTicket === true) {
+        <h6>
+          <strong class="titleSale" style="display: none"
+            >Recibo de Caja</strong
+          >
+        </h6>
 
+        @for (item of carrito; track $index) {
+          <p>
+            {{ item.title }} <span>x{{ item.count }}</span>
 
-            <p class="message">¡GRACIAS POR SU COMPRA!</p>
-            }
-        </div>
+            <span class="pU">${{ item.price }} </span>&nbsp; $
+            <span> {{ item.price! * (item.count || 1) }}</span>
+          </p>
+        }
 
-       <div class="pantalla-azul">
+        @for (lines of feedLines; track lines) {
+          <br />
+        }
 
-    <h3>Detalle de Venta</h3>
-    <div class="order-list" #scrollContainer>
-  @for (item of carrito; track $index) {
-    <div class="order-item">
+        <hr />
+        <p style="text-align: center; font-weight: bold; margin-top: 5px">
+          STATUS: {{ ventaFinalizada?.status }}
+        </p>
 
-      <span class="item-name">{{ item.title }}</span>
-       <span class="item-count">x {{item.count}}  &nbsp; </span>
-      <span class="item-price">${{ item.price! * (item.count || 1 )}}</span>
+        <p>
+          SUBTOTAL <span>$&nbsp;{{ calcularSubtotal().toFixed(2) }}</span>
+        </p>
 
+        <p>
+          Impuesto (IVA {{ impuestoPorcentaje }}%)
+          <span>$&nbsp; {{ calcularIva() }}</span>
+        </p>
+
+        <hr />
+
+        <p class="total">
+          TOTAL <span>$&nbsp;{{ calcularTotal().toFixed(2) }}</span>
+        </p>
+
+        <p class="message" style="text-align: center; margin-top: 10px">
+          ¡GRACIAS POR SU COMPRA!
+        </p>
+      }
     </div>
-  } @empty {
-    <p class="empty-msg">No hay productos seleccionados</p>
-  }
-</div>
 
-    <div class="total-section">
-      <p class="display-text">
-        <span>TOTAL:$</span>
-        <span>{{ calcularTotal() }}</span>
-      </p>
-    </div>
+<div class="pantalla-azul no-print" style="display: flex; flex-direction: column; ">
+
+  <p id="status" class="status-bar">
+    <strong>INFO: </strong>
+    @for (info of statusInfo; track info) {
+      <span class="status-badge">[{{ info }}]</span>
+    } @empty { <span>*</span> }
+  </p>
+
+  <div class="main-scroll-viewport" #scrollContainer id="area-de-scroll" style="overflow-y: auto; flex-grow: 1;">
+
+    @if (mostrarReporte) {
+      <div class="reporte-caja printable-receipt" >
+        <h3 style="color: #00ff88; border-bottom: 1px solid #333;">Reporte de Caja</h3>
+        @for (item of ventasDelDia; track item.id) {
+          <div class="order-item" style="border-bottom: 1px solid #333; padding: 5px 0;">
+            <span class="item-name">{{ item.id }} - {{ item.status }}</span>
+            <span class="item-count" style="color: #00ff88; margin-left: 10px;">${{ item.total }}</span>
+            <span class="item-price" style="float: right;"> {{ item.createdAt | date:'shortTime' }}</span>
+            <div style="clear: both;"></div>
+          </div>
+        } @empty {
+          <p class="empty-msg">No hay ventas registradas hoy</p>
+        }
+      </div>
+    }
+    @else if (mostrarBusqueda) {
+      <div class="busqueda-productos" style="padding: 10px;">
+        <h3>Buscar Productos</h3>
+        <input type="text" class="form-control mb-2" placeholder="Filtrar..." [(ngModel)]="filterTerm" (input)="search()" />
+        <table class="table table-sm table-dark">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of filteredProducts; track item.id) {
+              <tr>
+                <td>{{ item.title }}</td>
+                <td>${{ item.price }}</td>
+                <td>
+                  <button class="btn btn-primary btn-sm" (click)="onKeyClick(item.numberKey!)">+</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    @else {
+      <div class="detalle-venta" style="padding: 10px;">
+        <h3>Detalle de Venta</h3>
+        @for (item of carrito; track $index) {
+          <div class="order-item" style="border-bottom: 1px solid #333; padding: 5px 0;">
+            <span class="item-name">{{ item.title }}</span>
+            <span class="item-count">x{{ item.count }} &nbsp;</span>
+            <span class="item-price" style="float: right;"> ${{ (item.price! * (item.count || 1)).toFixed(2) }}</span>
+            <div style="clear: both;"></div>
+          </div>
+        } @empty {
+          <p class="empty-msg">No hay productos seleccionados</p>
+        }
+      </div>
+    }
   </div>
 
+  <div  style="border-top: 2px solid white; background: #000;">
+    @if (mostrarReporte) {
+      <p class="display-text">
+        <strong>TOTAL CIERRE DIA: ${{ calcularTotalVentas().toFixed(2) }}</strong>
+      </p>
+    }
+    @else {
+      <p style="margin: 0;">
+        Subtotal: ${{ calcularSubtotal().toFixed(2) }}
+      </p>
+      <p style="margin: 0; ">
+        IVA ({{impuestoPorcentaje}}%): ${{ calcularIva() }}
+      </p>
+      <p class="display-text" style="font-size: 1.6rem; text-align: right; margin: 0; color: #00ff88;">
+        <strong>TOTAL VENTA: ${{ calcularTotal().toFixed(2) }}</strong>
+      </p>
+    }
+  </div>
+</div>
+    <div class="rotary-switch-container no-print">
+      <div class="rotary-switch" id="main-switch">
+        <button
+          type="button"
+          style="background-color: transparent"
+          class="btn btn-on"
+          (click)="setAngle(0); irAModoVenta()"
+        >
+          ON
+        </button>
 
+        <button
+          type="button"
+          style="background-color: transparent"
+          class="btn btn-x"
+          (click)="setAngle(-90); imprimirReporteCaja(); off()"
+        >
+          X
+        </button>
 
+        <button
+          type="button"
+          style="background-color: transparent"
+          class="btn btn-z"
+          (click)="setAngle(90); getTotalCaja()"
+        >
+          Z
+        </button>
+        <button
+          type="button"
+          style="background-color: transparent"
+          class="btn btn-off"
+          (click)="setAngle(180); off()"
+        >
+          OFF
+        </button>
+      </div>
+    </div>
 
+    <div class="cash-register no-print">
+      <div class="left-gray-row">
+        <button (click)="feed()" class="gray" id="Boton_Feed">FEED</button>
 
+        <button (click)="receipt()" class="gray" id="receip">RECEIPT</button>
+      </div>
 
-        <div class="rotary-switch-container">
-            <div class="rotary-switch">
-                <span class="label reg">REG</span>
-                <span class="label x">X</span>
-                <span class="label z">Z</span>
-                <span class="label pgm-l">PGM</span>
-                <span class="label pgm-r">PGM</span>
-                <span class="label off">OFF</span>
-            </div>
+      <div class="left-panel">
+        <button
+          class="orange"
+          id="Boton_Post"
+          style="background-color: #e67e22"
+          (click)="postReceipt()"
+        >
+          POST
+        </button>
+
+        <button
+          (click)="open()"
+          class="orange"
+          id="Boton_Open"
+          style="background-color: #e67e22"
+        >
+          OPEN
+        </button>
+
+        <button (click)="ns()" class="orange" id="ns">NS</button>
+
+        <button (click)="rs()" class="orange" id="rs">RS</button>
+
+        <button
+          (click)="cancel()"
+          class="red"
+          id="Boton_Cancel"
+          style="background-color: #a82e2e"
+        >
+          ERR<br />CORR<br />CANCEL
+        </button>
+      </div>
+
+      <div class="left-panel">
+        <button
+          class="orange"
+          id="Boton_Price"
+          style="background-color: #e67e22"
+          (click)="price()"
+        >
+          PRICE
+        </button>
+
+        <button
+          class="orange"
+          id="double"
+          style="height: 123px"
+          style="background-color: #e67e22"
+          [style.background-color]="mostrarBusqueda ? '#6e6b6b' : '#e67e22'"
+          (click)="plu()"
+        >
+          {{ mostrarBusqueda ? "PLU " : "PLU " }}
+        </button>
+
+        <button (click)="date()" class="orange" id="date">DATE</button>
+
+        <button
+          class="red2"
+          id="Boton_C"
+          (click)="confirmarBorrado()"
+          style="background-color: #a82e2e; display: block; height: 200px"
+        >
+          C
+        </button>
+      </div>
+
+      <div class="Teclas_arriba">
+        <button
+          class="gray"
+          id="menos"
+          (click)="teclaMenos()"
+          style="width: 70px; height: 62px"
+        >
+          —
+        </button>
+
+        <button
+          class="gray"
+          id="porcentaje"
+          (click)="teclaPorcentaje()"
+          style="width: 70px; height: 62px"
+        >
+          %-
+        </button>
+
+        <button
+          class="gray"
+          id="clk"
+          (click)="teclaClerk()"
+          style="width: 70px; height: 62px"
+        >
+          CLK#
+        </button>
+      </div>
+
+      <div class="gray-key-row">
+        <button (click)="off()" class="gray" id="Boton_Off">OFF</button>
+
+        <button (click)="flechaArriba()" class="gray" id="Boton_Flecha_arriba">
+          ⬆
+        </button>
+
+        <button (click)="flechaAbajo()" class="gray" id="Boton_Flecha_abajo">
+          ↓
+        </button>
+
+        <button (click)="ra()" class="gray" id="ra">RA</button>
+
+        <button (click)="po()" class="gray" id="po">PO</button>
+
+        <button class="tax-btn" (click)="tax()">TAX</button>
+
+        <button
+          (click)="abrirAyuda()"
+          class="gray"
+          id="larga"
+          style="width: 130px"
+        >
+          HELP
+        </button>
+      </div>
+
+      <div class="number-pad">
+        <button class="gray" id="t1">T/S1</button>
+
+        <button class="gray" id="t2">T/S2</button>
+        <button
+          class="gray"
+          id="Boton_Shif"
+          [style.background-color]="isShiftActive ? '#ffc107' : '#6e6b6b'"
+          (click)="toggleShift()"
+        >
+          SHIFT
+        </button>
+        <!-- <button class="gray" id="Boton_Shif" style="background-color: #6e6b6b;">SHIFT</button> -->
+
+        <button class="num" id="Tecla_negra_7" (click)="appendNumber('7')">
+          7
+        </button>
+        <button class="num" id="Tecla_negra_8" (click)="appendNumber('8')">
+          8
+        </button>
+        <button class="num" id="Tecla_negra_9" (click)="appendNumber('9')">
+          9
+        </button>
+
+        <button class="num" id="Tecla_negra_4" (click)="appendNumber('4')">
+          4
+        </button>
+        <button class="num" id="Tecla_negra_5" (click)="appendNumber('5')">
+          5
+        </button>
+        <button class="num" id="Tecla_negra_6" (click)="appendNumber('6')">
+          6
+        </button>
+
+        <button class="num" id="Tecla_negra_1" (click)="appendNumber('1')">
+          1
+        </button>
+        <button class="num" id="Tecla_negra_2" (click)="appendNumber('2')">
+          2
+        </button>
+        <button class="num" id="Tecla_negra_3" (click)="appendNumber('3')">
+          3
+        </button>
+
+        <button class="num" id="Tecla_negra_0" (click)="appendNumber('0')">
+          0
+        </button>
+        <button class="num" id="Tecla_negra_00" (click)="appendNumber('00')">
+          00
+        </button>
+        <button
+          class="black"
+          id="Tecla_negra_Punto"
+          (click)="appendNumber('.')"
+        >
+          .
+        </button>
+      </div>
+
+      <div class="main-keys">
+        <div class="key-grid">
+          @for (num of visibleButtons; track num) {
+            <button
+              type="button"
+              class="btn-pos-white"
+              (click)="onKeyClick(num)"
+              [class.shift-mode]="isShiftActive"
+            >
+              <span class="key-number">{{ num }}</span>
+              <small
+                *ngIf="productsMap[num]"
+                style="display: block; font-size: 0.6rem"
+              >
+                `
+              </small>
+            </button>
+          }
         </div>
 
+        <div class="special-keys"></div>
+      </div>
 
+      <div class="main-keys2">
+        <div class="special-keys2">
+          <button
+            class="blue"
+            style="
+              width: 58px;
+              height: 52px;
+              left: -25px;
+              background-color: #1a3c77;
+            "
+            id="Boton_Cr"
+            (click)="crearVenta('TARGETA')"
+          >
+            CR
+          </button>
 
+          <button
+            class="blue"
+            style="
+              width: 58px;
+              height: 52px;
+              left: -25px;
+              background-color: #1a3c77;
+            "
+            id="Boton_Enter"
+          >
+            ENTER
+          </button>
+        </div>
 
+        <div class="special-keys2">
+          <button
+            class="blue"
+            style="
+              width: 58px;
+              height: 52px;
+              left: -25px;
+              background-color: #1a3c77;
+            "
+            id="Boton_Chk"
+            (click)="crearVenta('POR COBRAR')"
+          >
+            CHK
+          </button>
 
-        <div class="cash-register">
+          <button
+            class="blue"
+            style="
+              width: 58px;
+              height: 52px;
+              left: -25px;
+              background-color: #1a3c77;
+            "
+            id="Boton_Ch"
+            (click)="crearVenta('CHEQUE')"
+          >
+            CH
+          </button>
+        </div>
 
-            <div class="left-gray-row">
-                <button class="gray" id="Boton_Feed" >FEED</button>
-                <button class="gray" id="receip">RECEIPT</button>
-            </div>
+        <div class="special-keys3">
+          <button
+            (click)="imprimirRecibo()"
+            class="blue"
+            id="subtotal"
+            style="height: 80px; background-color: #6e6b6b"
+            id="Boton_Subtotal "
+          >
+            SUBTOTAL
+          </button>
+          <input
+            #barcodeInput
+            style="position: absolute; left: -1000vw"
+            (keydown.enter)="$event.preventDefault()"
+            (keyup.enter)="onScan(barcodeInput.value); barcodeInput.value = ''"
+            (blur)="focusScanner()"
+            autofocus
+          />
 
+          <!-- Boton total -->
 
-
-                <div class="left-panel">
-                    <button class="orange" id="Boton_Post" style="background-color: #e67e22;">POST</button>
-                    <button class="orange" id="Boton_Open" style="background-color: #e67e22;">OPEN</button>
-                    <button class="orange" id="ns">NS</button>
-                    <button class="orange" id="rs">RS</button>
-                    <button class="red" id="Boton_Cancel" style="background-color: #a82e2e;">ERR<br>CORR<br>CANCEL</button>
-                </div>
-
-
-
-
-                <div class="left-panel">
-
-
-                    <button class="orange" id="Boton_Price" style="background-color: #e67e22;">PRICE</button>
-                    <button class="orange" id="double" style="height: 123px;" style="background-color: #e67e22;">PLU</button>
-                    <button class="orange" id="date">DATE</button>
-                    <button class="red2"id="Boton_C"  (click)="deleteLastOne()" style="background-color: #a82e2e; display: block; height: 200px;">C</button>
-                </div>
-
-                <div class="Teclas_arriba">
-                    <button class="gray" id="menos"  style="width: 70px; height: 62px;">—</button>
-                     <button class="gray" id="porcentaje"  style="width: 70px; height: 62px;"> %-</button>
-                     <button class="gray" id="clk" style="width: 70px; height: 62px;" >CLK#</button>
-                </div>
-
-                <div class="gray-key-row">
-
-                     <button class="gray" id="Boton_Off" >OFF</button>
-                     <button class="gray" id="Boton_Flecha_arriba" > ⬆ </button>
-                     <button class="gray"id="Boton_Flecha_abajo" > ↓ </button>
-                     <button class="gray" id="ra">RA</button>
-                     <button class="gray" id="po">PO</button>
-                     <button class="gray" id="tax">TAX</button>
-                     <button class="gray" id="larga" style="width: 130px;" >HELP</button>
-                    </div>
-
-
-                <div class="number-pad">
-                    <button class="gray" id="t1">T/S1</button>
-
-                    <button class="gray" id="t2">T/S2</button>
-
-                    <button class="gray" id="Boton_Shif" style="background-color: #6e6b6b;" >SHIFT</button>
-                    <button class="num" id="Tecla_negra_7" >7</button>
-                    <button class="num" id="Tecla_negra_8">8</button>
-                    <button class="num" id="Tecla_negra_9">9</button>
-                    <button class="num" id="Tecla_negra_4">4</button>
-                    <button class="num" id="Tecla_negra_5">5</button>
-                    <button class="num" id="Tecla_negra_6">6</button>
-                    <button class="num" id="Tecla_negra_1">1</button>
-                    <button class="num" id="Tecla_negra_2">2</button>
-                    <button class="num" id="Tecla_negra_3">3</button>
-                    <button class="num" id="Tecla_negra_0">0</button>
-                    <button class="num" id="Tecla_negra_00">00</button>
-                    <button class="black" id="Tecla_negra_Punto">.</button>
-                </div>
-
-                <div class="main-keys">
-                    <div class="key-grid">@for (num of buttons; track num) {
-    <button
-      type="button"
-      class="btn-pos-white"
-      (click)="onKeyClick(num)">
-
-      <span class="key-number">{{ num }}</span>
-
-
-    </button>
-  }
+          <button
+            (click)="crearVenta('EFECTIVO')"
+            [disabled]="carrito.length === 0"
+            class="blue"
+            style="height: 120px; background-color: #1a3c77"
+            id="Boton_Ca"
+          >
+            CA/AMT
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+@if (showHelpModal) {
+  <div class="modal-overlay" (click)="showHelpModal = false">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Manual de Operación POS</h2>
+        <button class="close-btn" (click)="showHelpModal = false">
+          &times;
+        </button>
+      </div>
 
-                    <div class="special-keys">
+      <div class="modal-body-scroll">
+        <section>
+          <h3><span class="dot orange"></span> Teclas Naranjas (Gestión)</h3>
+          <ul>
+            <li><strong>RECEIPT:</strong> Alterna la emisión del ticket.</li>
+            <li>
+              <strong>POST:</strong> Para registros posteriores a la venta.
+            </li>
+            <li>
+              <strong>PRICE / PLU:</strong> Ingreso manual de precios o códigos
+              de producto.
+            </li>
+            <li><strong>OPEN:</strong> Apertura de cajón sin venta.</li>
+          </ul>
+        </section>
 
-                    </div>
-                </div>
-                <div class="main-keys2">
+        <section>
+          <h3><span class="dot magenta"></span> Teclas Rojas (Corrección)</h3>
+          <ul>
+            <li>
+              <strong>C (Clear):</strong> Borra el número actual o detiene una
+              alerta.
+            </li>
+            <li>
+              <strong>ERR CORR / CANCEL:</strong> Elimina el último artículo o
+              cancela la transacción completa.
+            </li>
+            <li><strong>- :</strong> Aplica una reducción de monto fijo.</li>
+          </ul>
+        </section>
 
-                    <div class="special-keys2">
-                        <button class="blue" style="width: 58px; height: 52px; left: -25px; background-color:  #1a3c77;" id="Boton_Cr">CR</button>
-                        <button class="blue" style="width: 58px; height: 52px; left: -25px; background-color:  #1a3c77;" id="Boton_Enter">ENTER</button>
-                    </div>
+        <section>
+          <h3><span class="dot blue"></span> Teclas Azules (Transacción)</h3>
+          <ul>
+            <li>
+              <strong>RA / PO:</strong> Recibo a cuenta (Entrada de dinero) /
+              Pago (Salida de dinero).
+            </li>
+            <li>
+              <strong>CA/AMT:</strong> Finaliza la venta (Efectivo) y calcula el
+              cambio.
+            </li>
+            <li><strong>T/S 1 - 2:</strong> Impuestos/Tasas específicas.</li>
+            <li><strong>CR / CHK:</strong> Pagos con Crédito o Cheque.</li>
+          </ul>
+        </section>
 
-                    <div class="special-keys2">
-                        <button class="blue"  style="width: 58px; height: 52px; left: -25px; background-color:  #1a3c77;" id="Boton_Chk">CHK</button>
-                        <button class="blue"  style="width: 58px; height: 52px; left: -25px; background-color:  #1a3c77;" id="Boton_Ch">CH</button>
-                    </div>
+        <section>
+          <h3><span class="dot green"></span> Teclas Verdes (Ayuda)</h3>
+          <ul>
+            <li><strong>HELP:</strong> Abre este menú de ayuda.</li>
+            <li><strong>%- :</strong> Aplica un porcentaje de descuento.</li>
+          </ul>
+        </section>
 
-                    <div class="special-keys3">
-                        <button (click)="imprimirRecibo()" class="blue" id="subtotal" style="height: 80px; background-color: #6e6b6b;" id="Boton_Subtotal " >SUBTOTAL</button>
-                       <!-- Boton total -->
-                        <button  class="blue" style="height: 120px; background-color:  #1a3c77;" id="Boton_Ca">CA/AMT</button>
-                    </div>
+        <section>
+          <h3><span class="dot gray"></span> Teclas Grises/Negras</h3>
+          <ul>
+            <li><strong>TAX:</strong> Programación y consulta de impuestos.</li>
+            <li>
+              <strong>SUBTOTAL:</strong> Muestra el monto acumulado en la
+              pantalla azul.
+            </li>
+            <li>
+              <strong>↑ / ↓:</strong> Navegación por la lista de productos en
+              pantalla.
+            </li>
+            <li>
+              <strong>NS:</strong> "No Sale", abre cajón para cambios menores.
+            </li>
+            <li><strong>CLK#:</strong> Cambio de operador/cajero.</li>
+          </ul>
+        </section>
+      </div>
 
-                </div>
-
-                </div>
-
-                </div>
+      <div class="modal-footer">
+        <button class="btn-ok" (click)="showHelpModal = false">
+          CERRAR MANUAL
+        </button>
+      </div>
+    </div>
+  </div>
+}
+<div class="modal fade" id="modalPassword" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white border-primary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Autorización Requerida</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Ingrese contraseña de administrador para borrar el producto:</p>
+        <input type="password"
+               class="form-control bg-secondary text-white border-0"
+               [(ngModel)]="passwordAdmin"
+               (keyup.enter)="validarYBorrar()"
+               placeholder="****">
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="validarYBorrar()">Confirmar</button>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-

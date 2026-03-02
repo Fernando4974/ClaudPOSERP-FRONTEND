@@ -3,21 +3,34 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { Router } from '@angular/router';
 import { connect } from 'rxjs';
 import { connectToServer } from '../../web-socket/socket-client';
+import { NavBarService } from '../../services/navBar/navBar.service';
+import { NgIf } from "@angular/common"
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NavbarComponent],
+  imports: [NavbarComponent, NgIf],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.css',
+  providers: [NavBarService]
 })
 export class DashboardComponent implements OnInit {
+public userRole: string | null = '';
+  constructor(private router: Router, public _navService: NavBarService) {
+     this._navService.setExitButtonVisibility(true)
 
-  constructor(private router: Router) {
 
   }
+
   ngOnInit(): void {
 
-   
+
+    if (localStorage.getItem('user_data')) {
+      this.userRole = localStorage.getItem('user_data')
+    }
+
+
+
+
 
   }
 
@@ -33,8 +46,11 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(["/maintenancePage"]);
   }
 
+  salesModule(){
+    this.router.navigate(["/sales"])
+  }
   configModule(){
-    this.router.navigate(["/maintenancePage"]);
+    this.router.navigate(["/user"]);
   }
 
   employedModule(){

@@ -15,6 +15,7 @@ export class ProductService {
   appUrl: string = '';
   apiGetOneProduct: string = "";
   apiDeleteProduct: string = "";
+  apiValideNumberKey : string= ''
 
 
 
@@ -22,7 +23,8 @@ export class ProductService {
     this.appUrl = environment.apiUrl
     this.apiGetAllUrl = "products/getAll"
     this.apiNewProductUrl = "products/create"
-    this.apiUpdateProductUrl = "products"
+    this.apiValideNumberKey = "products/number-key"
+    this.apiUpdateProductUrl = "products/update"
     this.apiGetOneProduct = "products"
     this.apiDeleteProduct = "products"
   }
@@ -43,6 +45,13 @@ export class ProductService {
     return this.http.get<updateProduct>(`${this.appUrl}${this.apiGetOneProduct}/${id}`)
   }
 
+
+  _findNumberKey(data: string): Observable<any> {
+
+
+    return this.http.get<any>(`${this.appUrl}${this.apiValideNumberKey}/${data}`)
+  }
+
   createProduct(newProduct: newProduct, file: File | null): Observable<any> {
     const formData = new FormData();
     if (file) {
@@ -56,11 +65,10 @@ export class ProductService {
         formData.append(key, value.toString());
       }
     });
-
+console.log(formData)
     return this.http.post(`${this.appUrl}${this.apiNewProductUrl}`, formData);
   }
-
-  updateProduct(updateProduct: updateProduct, file: File | null, id: string): Observable<any> {
+   updateProduct(updateProduct: updateProduct, file: File | null, id: string): Observable<any> {
     const formData = new FormData();
     if (file) {
       formData.append('file', file);
@@ -73,9 +81,11 @@ export class ProductService {
         formData.append(key, value.toString());
       }
     });
-console.log(`${this.appUrl}${this.apiUpdateProductUrl}/${id}`)
-    return this.http.patch(`${this.appUrl}${this.apiUpdateProductUrl}/${id}`, formData);
+    console.log(formData)
+     return this.http.patch(`${this.appUrl}${this.apiUpdateProductUrl}/${id}`, formData);
+
   }
+
   _deleteProduct(id:string):Observable<any>{
     return this.http.delete(`${this.appUrl}${this.apiDeleteProduct}/${id}`)
 

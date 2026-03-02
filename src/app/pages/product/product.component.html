@@ -7,7 +7,7 @@
     <div>
       <div class="control-content">
         <div class="new-button">
-          <button class="btn btn-success mt-3" (click)="goToNewProduct()">Nuevo</button>
+          <button *appHasRole="'admin'" class="btn btn-success mt-3" (click)="goToNewProduct()">Nuevo</button>
         </div>
 
         <div class="input-group flex-nowrap mt-3">
@@ -19,7 +19,7 @@
             aria-describedby="addon-wrapping"
             [(ngModel)]="filterTerm"
             (input)="search()"
-          >
+          >   <span class="input-group-text" id="search-addon">🔍</span>
         </div>
 
         &nbsp;
@@ -27,6 +27,7 @@
       </div>
 
       <div>
+
         <div *ngIf="filteredProducts.length === 0" class="alert alert-light mt-2">
           No se encontraron productos que coincidan con "{{filterTerm}}"
         </div>
@@ -38,9 +39,10 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Price</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripcion</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Tecla Rapida</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -49,14 +51,16 @@
             <td>{{item.title}}</td>
             <td>{{item.description}}</td>
             <td>$ {{item.price}}</td>
+            <td>* {{item.numberKey}}</td>
             <td>
-              <button (click)="editProduct(item.id)" class="btn btn-warning" title="editar">
+              <button *appHasRole="'admin'" (click)="editProduct(item.id)" class="btn btn-warning" title="editar">
                 <img src="ajustes.png" alt="ico">
               </button>
             </td>
           </tr>
         </tbody>
       </table>
+       <app-spinner *ngIf="spinner"></app-spinner>
     </div>
   </div>
 </body>

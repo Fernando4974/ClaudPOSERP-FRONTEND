@@ -2,7 +2,7 @@
 <div class="wraper">
   <app-sidebar></app-sidebar>
   <div class="body">
-    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form-container">
+    <form [formGroup]="productForm"  class="product-form-container">
       <h3 class="title">Editar Producto</h3>
 
       <header class="form-header d-flex justify-content-between align-items-start mb-4">
@@ -101,12 +101,17 @@
         </div>
 
         <div class="mt-5">
-          <button type="submit" class="btn btn-success px-4 py-2" [disabled]="productForm.invalid" onclick=''>
+          <button type="submit" class="btn btn-success px-4 py-2" [disabled]="productForm.invalid" *ngIf="loading"
+          (click)="showModalUpdate = true">
             Editar Producto
           </button>
+          @if (showModalUpdate){
+            <app-confirm-modal-component title="Actualizar Producto" message="Realmente Deseas Realizar estos cambios"
+            btnOkText="Si" btnCancelText="No" (onConfirm)="executeActionUpdate()" (onCancel)="showModal=false"></app-confirm-modal-component>
+          }
 
           <span>&nbsp;</span>
-          <button type="button" class="btn btn-danger px-4 py-2" [disabled]="productForm.invalid"
+          <button type="button" class="btn btn-danger px-2 py-2" [disabled]="productForm.invalid" *ngIf="loading"
             (click)="showModal =true">
             Eliminar Producto
           </button>
@@ -140,5 +145,6 @@
         </div>
       </div>
     </form>
+    <app-spinner *ngIf="visibleSpinner" ></app-spinner>
   </div>
 </div>

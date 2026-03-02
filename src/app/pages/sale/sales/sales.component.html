@@ -1,0 +1,94 @@
+<app-navbar></app-navbar>
+
+<div class="main-container d-flex">
+  <aside class="sidebar-wrapper">
+    <app-sidebar></app-sidebar>
+  </aside>
+
+  <main class="content-wrapper flex-grow-1 p-4">
+    <div class="container-fluid">
+
+      <div class="row justify-content-center mb-4">
+        <div class="col-12 col-xl-10">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body p-2">
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control border-0 shadow-none"
+                  placeholder="Buscar ventas por ID o estado..."
+                  [(ngModel)]="filterTerm"
+                  (input)="search()"
+                >
+                <span class="input-group-text bg-white border-0">🔍</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="spinnerVisible" class="text-center my-5">
+        <app-spinner></app-spinner>
+        <p class="text-muted mt-2">Cargando Ventas...</p>
+      </div>
+
+      <div *ngIf="!spinnerVisible && filteredSales.length === 0 && filterTerm"
+           class="alert alert-warning shadow-sm mx-auto" style="max-width: 900px;">
+        No se encontraron resultados para "<strong>{{filterTerm}}</strong>"
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+          <div class="card shadow-sm border-0" *ngIf="filteredSales.length > 0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th class="ps-4">ID</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th class="text-end pe-4">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of filteredSales">
+                    <td class="ps-4">
+                      <span class="text-primary fw-bold">
+                        #{{ item.id?.toString()?.substring(0,8) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge rounded-pill"
+                        [ngClass]="{
+                          'bg-success-subtle text-success': item.status === 'EFECTIVO',
+                          'bg-info-subtle text-info': item.status === 'CHEQUE',
+                          'bg-danger-subtle text-danger': item.status === 'POR COBRAR'
+                        }">
+                        {{ item.status }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="text-muted small">
+                        {{ item.createdAt | date:'short' }}
+                      </span>
+                    </td>
+                    <td class="fw-semibold text-dark">
+                      ${{ item.total | number:'1.2-2' }}
+                    </td>
+                    <td class="text-end pe-4">
+                      <button (click)="editSale(item.id)" class="btn btn-outline-secondary btn-sm border-0" title="Ver detalle">
+                        <img src="ajustes.png" alt="edit" style="width: 18px; opacity: 0.7;">
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
