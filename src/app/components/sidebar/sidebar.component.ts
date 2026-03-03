@@ -14,6 +14,7 @@ export class SidebarComponent {
   constructor(private location: Location) {} // <-- Inyectar aquí
 
   goBack(): void {
-    this.location.back(); // Esto regresa a la página anterior en el historial
+    this.location.back()
+    ; // Esto regresa a la página anterior en el historial
   }
 }

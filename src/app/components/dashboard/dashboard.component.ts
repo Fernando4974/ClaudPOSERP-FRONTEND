@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { Router } from '@angular/router';
-import { connect } from 'rxjs';
-import { connectToServer } from '../../web-socket/socket-client';
 import { NavBarService } from '../../services/navBar/navBar.service';
 import { NgIf } from "@angular/common"
 @Component({
