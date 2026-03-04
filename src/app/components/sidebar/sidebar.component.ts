@@ -11,10 +11,10 @@ import { Location } from '@angular/common';
 })
 export class SidebarComponent {
 
-  constructor(private location: Location) {} // <-- Inyectar aquí
+  constructor(private location: Location) {} 
 
   goBack(): void {
     this.location.back()
-    ; // Esto regresa a la página anterior en el historial
+    ;
   }
 }

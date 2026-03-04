@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Ventas</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+
+            background-color: #f4f7f6;
+
+        }
+
+        header {
+            background-color: #2c3e50;
+
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        /* Contenedor de las tarjetas de datos */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 10px;
+
+
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            border-top: 5px solid #3498db;
+            max-height: 150px;
+        }
+
+        .card h3 {
+            margin: 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .card p {
+            margin: 10px 0 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: #bdc3c7;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 0;
+          flex: 1 1 auto;
+            max-height: fit-content;
+        }
+
+        .footer-content p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h4>Resumen de Operaciones</h4>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="card">
+            <h3>Producto más vendido</h3>
+            <p>{{ mostSoldProduct }}</p>
+        </div>
+
+        <div class="card" style="border-top-color: #27ae60;">
+            <h3>Día con más ventas</h3>
+            <p>{{ mostSaleDay }}</p>
+        </div>
+
+        <div class="card" style="border-top-color: #f1c40f;">
+            <h3>Promedio de Productos Vendidos por cada Venta</h3>
+            <p>{{ averageAmountProductSale.toFixed(2) }}</p>
+        </div>
+
+        <div class="card" style="border-top-color: #e67e22;">
+            <h3>Promedio de Venta por Día</h3>
+            <p>$ {{ averageSaleDay.toFixed(2) }}</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p><strong>Point of Sale and Enterprise Resource Planning v1.0</strong></p>
+            <p>&copy; 2026 Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

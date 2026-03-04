@@ -11,6 +11,7 @@ import { UserService } from './services/user.service';
 import { CommonModule } from '@angular/common';
 import { tokenInterceptor } from './utils/token.interceptor';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,7 +25,8 @@ export const appConfig: ApplicationConfig = {
     {
       provide: RECAPTCHA_SETTINGS,
       useValue: {
-        siteKey:'6LeotH0sAAAAAA64glt61y1KTK7CxlDGYmTGGe7p'
+        siteKey:environment.siteKey
+        // '6LeotH0sAAAAAA64glt61y1KTK7CxlDGYmTGGe7p'
         // siteKey: '6LfC7m8sAAAAACJROJJavsNEyou509YVnfdEoVU1' //  PARA PRUEBAS
       },
     },

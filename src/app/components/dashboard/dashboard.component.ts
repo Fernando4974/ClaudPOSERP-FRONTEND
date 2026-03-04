@@ -3,10 +3,11 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { Router } from '@angular/router';
 import { NavBarService } from '../../services/navBar/navBar.service';
 import { NgIf } from "@angular/common"
+import { StatusComponent } from '../status/status.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NavbarComponent, NgIf],
+  imports: [NavbarComponent, NgIf, StatusComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   providers: [NavBarService]

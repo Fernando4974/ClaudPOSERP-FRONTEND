@@ -89,8 +89,8 @@ getTotalCaja() {
       this.ventasDelDia = data;
       this.mostrarBusqueda= false;
 
-      this.mostrarReporte = true; // <--- AGREGAR ESTO para que cambie la pantalla
-      console.log('Total Caja:', data);
+      this.mostrarReporte = true;
+
     },
     error: (err) => {
       console.error('Error al obtener total de caja:', err);
@@ -139,7 +139,7 @@ onKeyClick(buttonNumber: number) {
   const productoOriginal = this.productsMap[buttonNumber];
 
   if (!productoOriginal) {
-    console.log('Product not found');
+
     return;
   }
 
@@ -170,7 +170,7 @@ onKeyClick(buttonNumber: number) {
   const productFound = this.listProduct.find(p => p.barcode === barcodeTrimmed);
 
   if (!productFound) {
-    console.log('Product not found:', barcodeTrimmed);
+    this.mostrarMensajeTemporal("Producto no encontrado");
     return;
   }
 
@@ -264,7 +264,7 @@ validarYBorrar() {
   this._saleService.getAdminPassword(this.passwordAdmin).subscribe({
     next: (res) => {
       if (res) {
-        console.log('Contraseña correcta. Procediendo a borrar...');
+     this.mostrarMensajeTemporal("Contraseña correcta. Acción permitida.");
           this.ejecutarBorradoReal();
 
 
@@ -273,7 +273,7 @@ validarYBorrar() {
     modal.hide();
     this.isModalOpen = false;
   } else {
-    alert('Contraseña incorrecta. Acción denegada.');
+   this.mostrarMensajeTemporal("Contraseña incorrecta. Acción denegada.");
     this.passwordAdmin = '';
   }
 },

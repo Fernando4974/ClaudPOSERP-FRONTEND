@@ -23,8 +23,8 @@ public role: string | null=''
   }
   ngOnInit(): void {
     this.role= localStorage.getItem('user_data')
-    console.log('role',this.role)
-   
+  
+
 
 }
   logOut(){
