@@ -1,10 +1,6 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { RECAPTCHA_SETTINGS } from 'ng-recaptcha'
-
-import { FormsModule } from '@angular/forms';
-
-
+import { RECAPTCHA_SETTINGS } from 'ng-recaptcha';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { UserService } from './services/user.service';
@@ -12,24 +8,39 @@ import { CommonModule } from '@angular/common';
 import { tokenInterceptor } from './utils/token.interceptor';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { environment } from '../environments/environment';
+import { SocialAuthServiceConfig, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([tokenInterceptor]),
-      withInterceptors([authInterceptor])),
+      withInterceptors([tokenInterceptor, authInterceptor]) // Se pueden pasar ambos en un solo array
+    ),
+    // UserService es un servicio, si tiene @Injectable({providedIn: 'root'}) no es necesario aquí,
+    // pero dejarlo no rompe nada.
     UserService,
-    CommonModule,
+
     {
       provide: RECAPTCHA_SETTINGS,
       useValue: {
-        siteKey:environment.siteKey
-        // '6LeotH0sAAAAAA64glt61y1KTK7CxlDGYmTGGe7p'
-        // siteKey: '6LfC7m8sAAAAACJROJJavsNEyou509YVnfdEoVU1' //  PARA PRUEBAS
+        siteKey: environment.siteKey
       },
     },
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.ID_CLIENTE_GOOGLE)
+          }
+        ],
+        onError: (err) => {
+          console.error('Social Auth Error:', err);
+        }
+      } as SocialAuthServiceConfig,
+    }
   ]
-
 };

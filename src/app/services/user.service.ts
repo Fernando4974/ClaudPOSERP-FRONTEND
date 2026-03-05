@@ -79,5 +79,13 @@ getUserRoles(): string {
   updateUser(data:any):Observable<any>{
     return this.http.patch(`${this.AppUrl}${this.APIUrlUpdateThisUser}`,data)
   }
-
+  loginWithGoogle(token: string): Observable<any> {
+    return this.http.post(`${this.AppUrl}auth/google-login`, { token }).pipe(
+      tap((response: any) => {
+        // Guardamos el usuario completo (que trae los roles) en el storage
+        localStorage.setItem('user_data', JSON.stringify(response.userRoles));
+        this.userSubject.next(response.userRoles);
+      })
+    );
+  }
 }
