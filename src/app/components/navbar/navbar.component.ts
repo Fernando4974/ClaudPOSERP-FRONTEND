@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NavBarService } from '../../services/navBar/navBar.service';
+import { UserService } from '../../services/user.service';
 
 
 @Component({
@@ -9,20 +11,28 @@ import { Component } from '@angular/core';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
 flagExitButton:boolean=true
+public role: string | null=''
+
 
   ///4:29 min tutorial
-  constructor(){
+  constructor(public navService: NavBarService){
 
   }
+  ngOnInit(): void {
+    this.role= localStorage.getItem('user_data')
+    console.log('role',this.role)
+   
+
+}
   logOut(){
     localStorage.removeItem('token');
+    localStorage.removeItem('user_data');
+    localStorage.removeItem('_grecaptcha');
     window.location.reload();
-  }
-  buttonVisibility(flag:boolean){
-    this.flagExitButton=flag
+    this.navService.setExitButtonVisibility(false)
   }
 
 

@@ -1,0 +1,81 @@
+/* Heredamos todos tus estilos anteriores y añadimos/modificamos estos: */
+
+.wraper {
+  display: flex;
+  width: 100%;
+}
+
+.body {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.product-form-container {
+  width: 100%;
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+/* Estilo para los campos de texto y SELECTS con linea inferior */
+.field-value, .form-select.field-value {
+  border: none;
+  border-bottom: 1px solid #ccc !important;
+  border-radius: 0;
+  padding: 5px 0;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.form-select.field-value {
+    padding-right: 20px; /* Espacio para la flecha del select */
+}
+
+.field-value:focus {
+  border-bottom-color: #28a745 !important; /* Verde para indicar edición activa */
+}
+
+.product-name-input {
+  width: 100%;
+  max-width: 500px;
+  font-size: 2rem;
+  font-weight: 300;
+  border: none !important;
+  border-bottom: 1px solid #dee2e6 !important;
+  color: #555;
+}
+
+.image-box {
+  width: 110px;
+  height: 110px;
+  border: 1px dashed #ccc;
+  border-radius: 50%; /* Foto de perfil circular */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: #fafafa;
+}
+
+.img-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mt-5 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.field-label {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+}

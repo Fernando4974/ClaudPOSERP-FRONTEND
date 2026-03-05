@@ -1,0 +1,30 @@
+/* Contenedor principal para que el sidebar no empuje demasiado */
+.main-container {
+  min-height: calc(100vh - 60px); /* Altura total menos el navbar */
+  background-color: #f8f9fa;
+}
+
+/* Evita que el sidebar cree espacios vacíos innecesarios */
+.sidebar-wrapper {
+  flex-shrink: 0;
+  background: white;
+  border-right: 1px solid #dee2e6;
+}
+
+/* Estilizado de badges para que se vean modernos */
+.badge {
+  padding: 0.5em 1em;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+/* Centrado responsivo del contenido */
+.content-wrapper {
+  overflow-x: hidden;
+}
+
+/* Quitar bordes molestos si la tabla está vacía */
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+}

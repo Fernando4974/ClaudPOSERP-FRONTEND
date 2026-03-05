@@ -27,7 +27,7 @@ export class ResetPasswordComponent implements OnInit{
   buttonDisabled:boolean=false;
   buttonCancelDisabled:boolean=true;
   token:string=""
-
+verPassword:boolean=false
 
   constructor(private _uservice:UserService, private params:ActivatedRoute, private route:Router) {
 

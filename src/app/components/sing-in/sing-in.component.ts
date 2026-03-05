@@ -23,6 +23,7 @@ export class SingInComponent implements OnInit {
   repeatpassword: string = '';
   credentials: string = '';
   alertTexto:string='';
+  verPassword:boolean=false;
   constructor(private _userService: UserService, private router: Router) {}
   ngOnInit(): void {}
 

@@ -1,5 +1,6 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { RecaptchaModule, RECAPTCHA_SETTINGS } from 'ng-recaptcha'
 
 import { FormsModule } from '@angular/forms';
 
@@ -21,6 +22,12 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor])),
     UserService,
     CommonModule,
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: {
+        siteKey: '6LfC7m8sAAAAACJROJJavsNEyou509YVnfdEoVU1' // <--- USA ESTA PARA PRUEBAS
+      },
+    },
   ]
 
 };

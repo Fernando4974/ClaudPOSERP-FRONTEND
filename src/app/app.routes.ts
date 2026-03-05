@@ -13,6 +13,9 @@ import { NewProductComponent } from './pages/product/new-product/new-product.com
 import { PosRegisterComponent } from './pages/pos/pos-version/pos-register/pos-register.component';
 import { PosVersionComponent } from './pages/pos/pos-version/pos-version.component';
 import { UpdateProductComponent } from './pages/product/update-product/update-product.component';
+import { UserComponent } from './pages/user/user.component';
+import { SalesComponent } from './pages/sale/sales/sales.component';
+import { ViewSalesComponent } from './pages/sale/view-sales/view-sales.component';
 const param: string = '';
 export const routes: Routes = [
   { path: "", redirectTo: '/logIn', pathMatch: 'full' },
@@ -28,5 +31,8 @@ export const routes: Routes = [
   { path: "pos-register", component: PosRegisterComponent },
   { path: "posVersion", component: PosVersionComponent },
   { path: "updateProduct/:id", component: UpdateProductComponent },
+  { path: "user", component: UserComponent },
+  { path: "sales", component: SalesComponent },
+  { path: "view-sales/:id", component: ViewSalesComponent },
   { path: "**", redirectTo: "/errorPage", pathMatch: 'full' },
 ];

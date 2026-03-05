@@ -8,12 +8,15 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { Router } from '@angular/router';
 import { PaginatioDto } from '../../interfaces/pagination.dto';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { UserService } from '../../services/user.service';
+import { HasRoleDirective } from '../../auth/directives/has-role.directive';
+import { NavBarService } from '../../services/navBar/navBar.service';
 
 @Component({
   selector: 'app-product',
   standalone: true,
   // Añadimos FormsModule aquí para que funcione el [(ngModel)]
-  imports: [NgFor, CommonModule, NavbarComponent, SidebarComponent, FormsModule, SpinnerComponent],
+  imports: [NgFor, CommonModule, NavbarComponent, SidebarComponent, FormsModule, SpinnerComponent, HasRoleDirective],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
 })
@@ -25,7 +28,9 @@ export class ProductComponent implements OnInit {
   pagination: PaginatioDto = { limit: 10, offset: 0 };
   spinner: boolean = false;
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(private productService: ProductService, private router: Router,public userService: UserService,public _navService : NavBarService) {
+  this._navService.setExitButtonVisibility(true)
+  }
 
   ngOnInit(): void {
     this.getAll();

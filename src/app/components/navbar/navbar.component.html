@@ -5,8 +5,8 @@
     <a class="navbar-brand mb-3" > ClaudPosERP</a>
     </div>
 
-    <form *ngIf="flagExitButton"  class="d-flex" role="search">
-
+    <form *ngIf="navService.showExitButton()"  class="d-flex" role="search">
+<a style="position: relative; " class="navbar-brand mb-0" >{{this.role?.replace('[', '')?.replace(']', '')?.replaceAll('"', '')?.toUpperCase()}}</a>
       <a class="btn btn-outline-success" type="submit" href="/logIn" (click)="logOut()">Salir</a>
     </form>
   </div>
