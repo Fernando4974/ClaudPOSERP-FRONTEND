@@ -7,5 +7,6 @@ export interface User{
 }
 export interface UserLogin{
   email:string,
-  password: string
+  password: string,
+  recaptchaToken: string
 }

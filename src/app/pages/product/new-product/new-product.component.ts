@@ -26,7 +26,7 @@ export class NewProductComponent implements OnInit {
     posAvalible: new FormControl(true),
     categorie: new FormControl(''),
     imgProduct: new FormControl(''), // Se usa para la vista previa (Base64)
-    numberKey: new FormControl<number | null>(null, [Validators.max(25)]),
+    numberKey: new FormControl<number | null>(null, [Validators.max(50), Validators.min(1)]),
   });
 
   alertText = "";
@@ -131,6 +131,12 @@ console.log(data)
       this.ejecutarCreacion(productToSend)
     }
   }
+  onScan(value: string) {
+  if (value) {
+    console.log('Enviando a NestJS:', value);
+    // Lógica para enviar al backend
+  }
+}
 
 ejecutarCreacion(productToSend: newProduct) {
   this._serviceProduct.createProduct(productToSend, this.selectedFile).subscribe({

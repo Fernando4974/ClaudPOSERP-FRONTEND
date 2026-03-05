@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Ventas</title>
+    
+</head>
+<body>
+
+    <header>
+        <h4>Resumen de Operaciones</h4>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="card">
+            <h3>Producto más vendido</h3>
+            <p>{{ mostSoldProduct }}</p>
+        </div>
+
+        <div class="card" style="border-top-color: #27ae60;">
+            <h3>Día con más ventas</h3>
+            <p>{{ mostSaleDay }}</p>
+        </div>
+
+        <div class="card" style="border-top-color: #f1c40f;">
+            <h3>Promedio de Productos Vendidos por cada Venta</h3>
+            <p>{{ averageAmountProductSale.toFixed(2) }}</p>
+        </div>
+
+        <div class="card" style="border-top-color: #e67e22;">
+            <h3>Promedio de Venta por Día</h3>
+            <p>$ {{ averageSaleDay.toFixed(2) }}</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p><strong>Point of Sale and Enterprise Resource Planning v1.0</strong></p>
+            <p>&copy; 2026 Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

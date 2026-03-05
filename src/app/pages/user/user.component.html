@@ -62,7 +62,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label class="field-label mb-1">Estado</label>
-              <select formControlName="isActive" class="form-select field-value">
+              <select [attr.disabled]="!_userService.hasRole('admin') ? true : null" formControlName="isActive" class="form-select field-value">
                 <option *ngFor="let option of statusOptions" [value]="option.value">
                   {{ option.label }}
                 </option>
@@ -77,7 +77,7 @@
             <label class="field-label mb-1">Inicio de Membresia</label>
             <div class="input-group">
               <span class="input-group-text bg-transparent border-0 border-bottom"><i class="fa fa-lock"></i></span>
-              <input formControlName="membershipStart" type="date" class="form-control field-value w-auto"
+              <input [readonly]="!_userService.hasRole('admin')" formControlName="membershipStart" type="date" class="form-control field-value w-auto"
                 placeholder="" />
             </div>
           </div>
@@ -89,7 +89,7 @@
             <label class="field-label mb-1">Fin de Membresia</label>
             <div class="input-group">
               <span class="input-group-text bg-transparent border-0 border-bottom"><i class="fa fa-lock"></i></span>
-              <input formControlName="membershipEnd" type="date" class="form-control field-value w-auto"
+              <input [readonly]="!_userService.hasRole('admin')" formControlName="membershipEnd" type="date" class="form-control field-value w-auto"
                 placeholder="" />
             </div>
           </div>
@@ -101,7 +101,7 @@
             Actualizar Usuario
           </button>
 
-          <button type="button" class="btn btn-danger px-2 py-2" (click)="showModal = true">
+          <button *appHasRole="'admin'"  type="button" class="btn btn-danger px-2 py-2" (click)="showModal = true">
             Eliminar Cuenta
           </button>
         </div>

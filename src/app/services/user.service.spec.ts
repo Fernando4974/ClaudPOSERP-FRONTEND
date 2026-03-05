@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { UserService } from './user.service';
 import { User } from '../interfaces/user';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 
 describe('UserService', () => {
   let servicio: UserService;

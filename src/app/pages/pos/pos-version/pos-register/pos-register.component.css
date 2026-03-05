@@ -109,85 +109,106 @@
     margin-top: 10px;
 }
 
-.rotary-switch-container {
-    grid-column: 3 / 4;
-    grid-row: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .rotary-switch {
-    width: 130px;
-    height: 130px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
-    background-color: #555;
-    border: 4px solid #222;
+    background-color: #444;
+    border: 6px solid #222;
     position: relative;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
+    /* Variable para controlar la rotación */
+    --angle: 0deg;
+    transition: transform 0.3s ease-in-out;
 }
 
+/* El indicador (La raya roja que gira) */
+.rotary-switch::after {
+    content: '';
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    /* El punto de origen es el centro del círculo */
+    transform-origin: center center;
+    /* La raya se posiciona y gira según la variable --angle */
+    transform: translate(-50%, -100%) rotate(var(--angle));
+    width: 8px;
+    height: 40px; /* Un poco más larga para que se note */
+    background-color: #ff0000;
+    border-radius: 4px;
+    z-index: 1;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Estilo de los botones */
+.rotary-switch .btn {
+    position: absolute;
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    z-index: 10;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.rotary-switch {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #444;
+    border: 6px solid #222;
+    position: relative;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
+    --angle: 0deg;
+}
+
+/* El indicador en forma de flecha */
+.rotary-switch::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    /* El origen de rotación es el centro del switch */
+    /* Usamos bottom center para que la base de la flecha esté en el centro */
+    transform-origin: bottom center;
+    transform: translate(-50%, -100%) rotate(var(--angle));
+
+    /* Dimensiones de la flecha */
+    width: 14px;  /* Un poco más ancha para que se vea la forma */
+    height: 50px; /* Un poco más larga */
+    background-color: #ff0000;
+    z-index: 5;
+
+    /* EFECTO FLECHA: Recorta el rectángulo en forma de punta */
+    /* Los puntos definen: Base izquierda, Punta, Base derecha */
+    clip-path: polygon(50% 0%, 100% 40%, 70% 40%, 70% 100%, 30% 100%, 30% 40%, 0% 40%);
+
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Opcional: El centro negro para tapar la base de la flecha y que se vea más limpio */
 .rotary-switch::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    background-color: #161515;
+    width: 25px;
+    height: 25px;
+    background-color: #111;
     border-radius: 50%;
+    z-index: 6; /* Por encima de la flecha */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
-.rotary-switch::after {
-    content: '';
-    position: absolute;
-    top: 25px;
-    left: calc(50% - 3px);
-    width: 6px;
-    height: 22px;
-    background-color: var(--key-red);
-    border-radius: 2px;
-}
-
-.rotary-switch .label {
-    position: absolute;
-    font-size: 0.7rem;
-    font-weight: bold;
-    color: var(--text-light);
-}
-
-.reg {
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.x {
-    top: 35px;
-    right: 10px;
-}
-
-.z {
-    bottom: 35px;
-    right: 10px;
-}
-
-.pgm-l {
-    bottom: 10px;
-    left: 35px;
-}
-
-.pgm-r {
-    bottom: 10px;
-    right: 35px;
-}
-
-.off {
-    top: 35px;
-    left: 10px;
-}
-
+/* Posiciones exactas */
+.btn-on  { top: 10%; left: 50%; transform: translateX(-50%); }
+.btn-x   { top: 40%; left: 10%; }
+.btn-z   { top: 40%; right: 10%; }
+.btn-off { bottom: 10%; left: 50%; transform: translateX(-50%); }
 /* === TECLADO === */
 /* .cash-register {
     grid-column: 1 / span 3;
@@ -227,7 +248,7 @@
     transition: all 0.05s ease;
     text-align: center;
     line-height: 1.2;
-    font-size: 0.7rem;
+font-size: 1rem;
     padding: 4px;
     position: relative;
 }
@@ -274,13 +295,14 @@ position: relative;
 .center-panel button {
     width: 80px;
     height: 38px;
+    font-size: 1.5rem;
 
 }
 
 .left-panel button {
 width: 75px;
 height: 60px;
-
+font-size: 1.2rem;
 display: flex;
 justify-content: center;
 align-items: center;
@@ -291,6 +313,7 @@ font-weight: bold;
 .right-panel button {
     width: 80px;
     height: 38px;
+    font-size: 1.5rem;
 }
 
 
@@ -313,7 +336,7 @@ background-color: black;
 display: flex;
 justify-content: center;
 align-items: center;
-font-weight: bold;
+font-size: 1.5rem;
 }
 
 
@@ -360,7 +383,7 @@ width: 96%;
 height: 100%;
 background-color:white;
 color: rgb(0, 0, 0);
-font-size: 1rem;
+font-size: 2rem;
 font-weight: bold;
 border-radius: 6px;
 border: none;
@@ -775,4 +798,373 @@ height: px;;
     .btn-clear, button {
         display: none !important;
     }
+}
+/* Cuando shift está activo, los números cambian de color para alertar al usuario */
+.active-shift .key-number {
+  color: #e67e22;
+  font-weight: bold;
+}
+
+.product-label {
+  display: block;
+  font-size: 0.6rem;
+  color: #555;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.order-list {
+  height: 300px; /* O la altura que prefieras para tu pantalla azul */
+  max-height: 300px;
+  overflow-y: auto;
+  scroll-behavior: smooth; /* Esto hará que el movimiento se vea fluido */
+}
+.tax-btn {
+  background-color: #1a1c24;
+  color: #00ff88; /* Verde brillante como la imagen */
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  border-radius: 8px;
+  border: 1px solid #333;
+  padding: 10px;
+  cursor: pointer;
+  width: 80px;
+}
+/* Fondo oscuro semi-transparente */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Por encima de todo */
+}
+
+/* Caja del modal */
+.modal-content {
+  background: #1a1c24;
+  color: white;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 12px;
+  border: 2px solid #333;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #ff5555;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Tabla de ayuda */
+.help-table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+.help-table th, .help-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.help-table th {
+  color: #00ff88; /* Verde como el botón TAX */
+  text-transform: uppercase;
+}
+
+.help-table td strong {
+  color: #55aaff;
+}
+
+/* Botón de cierre */
+.btn-ok {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  background: #2762b1;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #000;
+}
+
+.btn-ok:hover {
+  background: #00cc6e;
+}
+/* Contenedor principal del modal */
+.modal-content {
+  background: #1e1e26;
+  color: #e0e0e0;
+  width: 95%;
+  max-width: 600px;
+  max-height: 85vh; /* Altura máxima del 85% de la pantalla */
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column; /* Organiza header, body y footer */
+  border: 1px solid #444;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.7);
+}
+
+/* Cuerpo con SCROLL */
+.modal-body-scroll {
+  padding: 20px;
+  overflow-y: auto; /* AQUÍ SE ACTIVA EL SCROLL */
+  flex: 1; /* Toma todo el espacio disponible */
+}
+
+/* Estilos de las secciones */
+.modal-body-scroll h3 {
+  color: #55aaff;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+}
+
+.modal-body-scroll ul {
+  list-style: none;
+  padding: 0;
+}
+
+.modal-body-scroll li {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Puntos de colores para identificar teclas */
+.dot {
+  height: 10px;
+  width: 10px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 8 px;
+}
+.orange { background-color: #f39c12; }
+.red { background-color: #e92b16; }
+.blue { background-color: #3498db; }
+.green { background-color: #2ecc71; }
+.gray { background-color: #7f8c8d; }
+.magenta {
+  background-color: #ff2600; /* Magenta puro */
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0); /* Brillo sutil */
+}
+/* Scrollbar personalizada para que se vea moderna */
+.modal-body-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-body-scroll::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 4px;
+}
+/* === CORRECCIÓN ESPECÍFICA PARA 1024x768 === */
+/* === REPARACIÓN DE LAYOUT PARA 1024x768 === */
+/* === CORRECCIÓN DE LAYOUT 1024x768 (OBJETIVO: IMAGEN 3) === */
+/* === CORRECCIÓN DE LAYOUT PARA 1024x768 === */
+@media (max-width: 1024px) {
+
+    /* 1. Ajustamos el contenedor del fondo gris */
+    .cash-register {
+        display: flex;
+        flex-direction: row; /* Alinea los bloques principales de izquierda a derecha */
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 10px; /* Controla el espacio entre el teclado numérico y el de colores */
+        width: 95%;
+        margin: 0 auto;
+        position: relative;
+        overflow: visible;
+        min-height: 400px; /* Asegura que el fondo cubra todo el alto de los botones */
+    }
+
+    /* 2. RESET DE POSICIONES (Quitamos los "left" y "top" negativos) */
+    /* Esto hace que los teclados vuelvan a estar DENTRO del cuadro gris */
+    .left-panel{
+
+        margin-top: 60px !important; /* Espacio para que no choquen con las teclas de arriba */
+        left: -20px !important;
+        top: 0 !important;
+    }
+    .number-pad{
+
+        margin-top: 60px !important; /* Espacio para que no choquen con las teclas de arriba */
+        left: 0 !important;
+        top: 0 !important;
+    }
+
+    .main-keys {
+        position: static !important; /* Anula el relative/absolute anterior */
+        margin-top: 60px !important; /* Espacio para que no choquen con las teclas de arriba */
+        left: 0 !important;
+        top: 0 !important;
+    }
+    .main-keys2 {
+
+        left: 4% !important;
+        top: 0 !important;
+    }
+
+    /* 3. Ajustamos el tamaño de los botones para que quepan */
+    .key-grid {
+        grid-template-columns: repeat(5, 65px); /* Reducimos el ancho de columnas */
+        grid-template-rows: repeat(5, 50px);    /* Reducimos el alto de filas */
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .key-grid button {
+        font-size: 1.4rem; /* Texto un poco más pequeño para que no se corte */
+    }
+
+    .number-pad {
+        grid-template-columns: repeat(3, 60px);
+        grid-template-rows: repeat(6, 55px);
+        gap: 5px;
+    }
+
+    /* 4. Las teclas superiores (FEED, RECEIPT, etc) */
+    .Teclas_arriba{
+        position: absolute;
+        top: 15px; /* Las pegamos al borde superior del cuadro gris */
+        left: 34%;
+
+        width: auto;
+        display: flex;
+        justify-content: center;
+    }
+    .left-gray-row {
+        position: absolute;
+        top: 15px; /* Las pegamos al borde superior del cuadro gris */
+        left: 9.8%;
+        transform: translateX(-50%);
+        width: auto;
+        display: flex;
+        justify-content: center;
+    }
+        #Boton_Off {
+        position: absolute;
+        top: -13px; /* Las pegamos al borde superior del cuadro gris */
+        left: -260%;
+          transform: scale(0.90);
+
+        display: flex;
+        justify-content: center;
+    }
+        #Boton_Flecha_arriba {
+        position: absolute;
+       top: -13px; /* Las pegamos al borde superior del cuadro gris */
+        left: -155%;
+          transform: scale(0.90);
+        width: auto;
+        display: flex;
+        justify-content: center;
+    }
+        #Boton_Flecha_abajo {
+        position: absolute;
+      top: -13px; /* Las pegamos al borde superior del cuadro gris */
+        left: -70%;
+          transform: scale(0.90);
+
+
+        display: flex;
+        justify-content: center;
+    }
+        #ra {
+        position: absolute;
+       top: -13px; /* Las pegamos al borde superior del cuadro gris */
+        left: 10%;
+          transform: scale(0.90);
+        width: auto;
+        display: flex;
+        justify-content: center;
+    }
+        #po {
+        position: absolute;
+      top: -13px; /* Las pegamos al borde superior del cuadro gris */
+        left: 105%;
+          transform: scale(0.90);
+
+
+        display: flex;
+        justify-content: center;
+    }
+    .tax-btn {
+        position: absolute;
+        top: -13px; /* Las pegamos al borde superior del cuadro gris */
+        left: 205%;
+         height: 65px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #larga {
+        position: absolute;
+      top: -12px; /* Las pegamos al borde superior del cuadro gris */
+        left: 310%;
+         height: 70px;
+         transform: scale(0.90);
+         width: auto;
+        display: flex;
+        justify-content: center;
+        padding: 0%;
+        max-width: 50px;
+
+        align-items: center;
+    }
+
+    /* Reducimos la escala general para asegurar que nada toque los bordes del monitor */
+    .pos-simulation-container {
+        transform: scale(0.72);
+        transform-origin: top center;
+        margin-top: auto;
+    }
+      .receipt-area {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    background-color: var(--receipt-bg);
+    color: var(--receipt-text);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    border-radius: 6px;
+    padding: 10px 15px;
+    height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    border: 1px solid #000;
+    margin-left: 30px!important;
+}
+.rotary-switch {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background-color: #444;
+    border: 6px solid #222;
+    position: relative;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
+    top:20%;
+    /* Variable para controlar la rotación */
+    --angle: 0deg;
+    transition: transform 0.3s ease-in-out;
+
+}
+
 }

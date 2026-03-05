@@ -15,6 +15,7 @@ import { PosVersionComponent } from './pages/pos/pos-version/pos-version.compone
 import { UpdateProductComponent } from './pages/product/update-product/update-product.component';
 import { UserComponent } from './pages/user/user.component';
 import { SalesComponent } from './pages/sale/sales/sales.component';
+import { ViewSalesComponent } from './pages/sale/view-sales/view-sales.component';
 const param: string = '';
 export const routes: Routes = [
   { path: "", redirectTo: '/logIn', pathMatch: 'full' },
@@ -32,5 +33,6 @@ export const routes: Routes = [
   { path: "updateProduct/:id", component: UpdateProductComponent },
   { path: "user", component: UserComponent },
   { path: "sales", component: SalesComponent },
+  { path: "view-sales/:id", component: ViewSalesComponent },
   { path: "**", redirectTo: "/errorPage", pathMatch: 'full' },
 ];
