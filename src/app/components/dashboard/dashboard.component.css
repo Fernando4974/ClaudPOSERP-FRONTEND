@@ -59,4 +59,11 @@ label{
 
   }
 
+
+}
+@media (max-width: 1024px) {
+  body{
+    margin-top: 0%;
+  }
+
 }
