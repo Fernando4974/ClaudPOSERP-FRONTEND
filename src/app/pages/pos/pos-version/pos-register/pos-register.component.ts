@@ -39,6 +39,7 @@ export class PosRegisterComponent implements OnInit {
   dateFlag: boolean = true;
   openFlag: boolean = false;
   isModalOpen: boolean = false;
+  flagCancel: boolean = false;
 
   // Variables de Cálculos
   iva: number = 0;
@@ -253,9 +254,14 @@ ejecutarBorradoReal() {
     this.filterTerm = this.filterTerm.slice(0, -1);
     if (this.mostrarBusqueda) this.search();
   } else if (this.carrito.length > 0) {
+    if (this.flagCancel) {
+      this.carrito = [];
+      this.flagCancel = false;
+    }else {
     this.carrito.pop();
     this.selectedProduct = this.carrito.length > 0 ? this.carrito[this.carrito.length - 1] : null;
   }
+}
 }
 
 // Validación de la clave
@@ -283,6 +289,7 @@ validarYBorrar() {
 }
   });
 }
+
 
 
   search() {
@@ -414,11 +421,13 @@ teclaMenos() {
     this.feedLines.push(Date.now());
   }
 
-  cancel() {
-    this.carrito = [];
-    this.statusInfo.push("VENTA CANCELADA");
-    setTimeout(() => this.statusInfo = this.statusInfo.filter(s => s !== "VENTA CANCELADA"), 2000);
-  }
+ cancel() {
+
+ this.flagCancel = true;
+ console.log('Intentando cancelar venta. Flag cancel:', this.flagCancel);
+
+
+    }
 
   // --- CÁLCULOS Y VENTAS ---
 
