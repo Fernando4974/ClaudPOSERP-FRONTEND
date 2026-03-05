@@ -58,7 +58,7 @@ this.deteleButtonVisible=false
     this.saleService.getSelectSale(this.idSale).subscribe({
       next: (data: Sale) => {
         this.sale = data;
-        console.log(data)
+    
         this.visibleSpinner = false;
         this.loading = true; // Habilita los botones de acción
       },

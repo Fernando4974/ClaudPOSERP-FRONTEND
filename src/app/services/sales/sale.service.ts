@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { environment } from "../../../environments/environment.development";
+import { environment } from "../../../environments/environment";
 import { newSale, Sale } from "../../interfaces/sale";
 import { Observable } from "rxjs";
 
@@ -45,18 +45,6 @@ export class SaleService{
   getAdminPassword(password: string): Observable<any> {
   return this.http.post(`${this.appUrl}auth/validate-admin-password`, { password });
 }
-// createSale(saleData: any): Observable<any> {
-//   console.log(this.appUrl,this.apiCreateSale,'/', saleData)
-//   return this.http.post(`${this.appUrl}${this.apiCreateSale}`,saleData); // <-- ¡El 'return' es vital!
-// }
-// getAllSales():Observable<any>{
-//   return this.http.get(`${this.appUrl}${this.apiGetAllSales}`)
-// }
-// getSelectSale(id: string):Observable<Sale>{
-//   return this.http.get<Sale>(`${this.appUrl}${this.apiGetThisSale}/${id}`)
-// }
-// deleteSale(id: string): Observable<any>{
 
-//   return this.http.delete<Sale>(`${this.appUrl}${this.apiDeleteThisSale}/${id}`)
-// }
+
 }
