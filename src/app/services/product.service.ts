@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GetAllProduct, Product, newProduct, updateProduct } from '../interfaces/product';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { PaginatioDto } from '../interfaces/pagination.dto';
 
 @Injectable({

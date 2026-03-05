@@ -39,6 +39,7 @@ export class PosRegisterComponent implements OnInit {
   dateFlag: boolean = true;
   openFlag: boolean = false;
   isModalOpen: boolean = false;
+  flagCancel: boolean = false;
 
   // Variables de Cálculos
   iva: number = 0;
@@ -89,8 +90,8 @@ getTotalCaja() {
       this.ventasDelDia = data;
       this.mostrarBusqueda= false;
 
-      this.mostrarReporte = true; // <--- AGREGAR ESTO para que cambie la pantalla
-      console.log('Total Caja:', data);
+      this.mostrarReporte = true;
+
     },
     error: (err) => {
       console.error('Error al obtener total de caja:', err);
@@ -139,7 +140,7 @@ onKeyClick(buttonNumber: number) {
   const productoOriginal = this.productsMap[buttonNumber];
 
   if (!productoOriginal) {
-    console.log('Product not found');
+
     return;
   }
 
@@ -170,7 +171,7 @@ onKeyClick(buttonNumber: number) {
   const productFound = this.listProduct.find(p => p.barcode === barcodeTrimmed);
 
   if (!productFound) {
-    console.log('Product not found:', barcodeTrimmed);
+    this.mostrarMensajeTemporal("Producto no encontrado");
     return;
   }
 
@@ -253,9 +254,14 @@ ejecutarBorradoReal() {
     this.filterTerm = this.filterTerm.slice(0, -1);
     if (this.mostrarBusqueda) this.search();
   } else if (this.carrito.length > 0) {
+    if (this.flagCancel) {
+      this.carrito = [];
+      this.flagCancel = false;
+    }else {
     this.carrito.pop();
     this.selectedProduct = this.carrito.length > 0 ? this.carrito[this.carrito.length - 1] : null;
   }
+}
 }
 
 // Validación de la clave
@@ -264,7 +270,7 @@ validarYBorrar() {
   this._saleService.getAdminPassword(this.passwordAdmin).subscribe({
     next: (res) => {
       if (res) {
-        console.log('Contraseña correcta. Procediendo a borrar...');
+     this.mostrarMensajeTemporal("Contraseña correcta. Acción permitida.");
           this.ejecutarBorradoReal();
 
 
@@ -273,7 +279,7 @@ validarYBorrar() {
     modal.hide();
     this.isModalOpen = false;
   } else {
-    alert('Contraseña incorrecta. Acción denegada.');
+   this.mostrarMensajeTemporal("Contraseña incorrecta. Acción denegada.");
     this.passwordAdmin = '';
   }
 },
@@ -283,6 +289,7 @@ validarYBorrar() {
 }
   });
 }
+
 
 
   search() {
@@ -414,11 +421,13 @@ teclaMenos() {
     this.feedLines.push(Date.now());
   }
 
-  cancel() {
-    this.carrito = [];
-    this.statusInfo.push("VENTA CANCELADA");
-    setTimeout(() => this.statusInfo = this.statusInfo.filter(s => s !== "VENTA CANCELADA"), 2000);
-  }
+ cancel() {
+
+ this.flagCancel = true;
+ console.log('Intentando cancelar venta. Flag cancel:', this.flagCancel);
+
+
+    }
 
   // --- CÁLCULOS Y VENTAS ---
 
