@@ -38,7 +38,7 @@ export class UpdateProductComponent implements OnInit {
     stock: new FormControl<number>(0, [Validators.pattern(/^\d+$/)]),
     posAvalible: new FormControl(true),
     categorie: new FormControl(''),
-    numberKey: new FormControl<number | null>(null, [Validators.max(25)]),
+    numberKey: new FormControl<number | null>(null, [Validators.max(50)]),
   });
 
   // Modales y Alertas
@@ -129,16 +129,25 @@ export class UpdateProductComponent implements OnInit {
 
   private sendUpdate(product: updateProduct) {
     this._serviceProduct.updateProduct(product, this.selectedFile, this.id!).subscribe({
-      next: () => {
+      next: (data) => {
+        // console.log(data)
         this.visibleSpinner = false;
         this.alertTextOK = "Producto actualizado correctamente";
         this.alertText = "";
         // Opcional: navegar hacia atrás después de un tiempo
         setTimeout(() => this.comeBack(), 1500);
       },
-      error: (err) => this.handleError("Error al actualizar el producto")
-    });
-  }
+      error: (err) =>{
+        if (err.status === 409) {
+          this.handleError("Ya existe un Producto con el mismo nombre o código de Barras");
+        } else {
+          this.handleError("Error al conectar con el servidor");
+        }
+
+    }
+  });
+}
+
 
   findOneById(id: string) {
     this.visibleSpinner = true;

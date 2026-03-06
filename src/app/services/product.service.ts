@@ -32,7 +32,7 @@ export class ProductService {
     // const token = localStorage.getItem('token')
     // const headerToken = new HttpHeaders().set('Authorization',`Bearer ${token}`)
     //old manual return mode --> return this.http.get<Product[]>(`${this.appUrl}${this.apiGetAllUrl}`,{headers:headerToken})
-    const limit = paginationDto?.limit || 10;
+    const limit = paginationDto?.limit || 50;
     const offset = paginationDto?.offset || 0;
     const params = new HttpParams()
       .set('limit', limit.toString())

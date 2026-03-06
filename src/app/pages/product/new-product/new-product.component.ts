@@ -150,7 +150,7 @@ ejecutarCreacion(productToSend: newProduct) {
     error: (err) => {
       this.loading = false;
       this.disableButton = true;
-      this.alertText = err.error.statusCode === 409 ? "Ya existe un Producto con el mismo nombre" : "Error de servidor";
+      this.alertText = err.error.statusCode === 409 ? "Ya existe un Producto con el mismo nombre o codigo de Barras" : "Error de servidor";
     }
   });
 }

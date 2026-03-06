@@ -1,8 +1,9 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environment";
-import { newSale, Sale } from "../../interfaces/sale";
+import { GetAllSales, newSale, Sale } from "../../interfaces/sale";
 import { Observable } from "rxjs";
+import { PaginatioDto } from "../../interfaces/pagination.dto";
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,14 @@ export class SaleService{
     return this.http.post(`${this.appUrl}${this.apiCreateSale}`, saleData);
   }
 
-  getAllSales(): Observable<any> {
-    return this.http.get(`${this.appUrl}${this.apiGetAllSales}`);
+   getAllSales(paginarionDto?:PaginatioDto): Observable<any> {
+    const limit = paginarionDto?.limit || 8;
+    const offset = paginarionDto?.offset || 0;
+    const params = new HttpParams()
+        .set('limit', limit.toString())
+        .set('offset', offset.toString());
+    
+    return this.http.get<GetAllSales[]>(`${this.appUrl}${this.apiGetAllSales}`, { params });
   }
 
   getSelectSale(id: string): Observable<Sale> {

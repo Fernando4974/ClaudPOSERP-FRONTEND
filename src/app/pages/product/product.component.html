@@ -14,25 +14,24 @@
           <input
             type="text"
             class="form-control"
-            placeholder="Buscar por nombre o descripción..."
-            aria-label="Username"
-            aria-describedby="addon-wrapping"
+            placeholder="Buscar por nombre o descripcion..."
+            aria-label="Buscar producto"
+            aria-describedby="search-addon"
             [(ngModel)]="filterTerm"
             (input)="search()"
-          >   <span class="input-group-text" id="search-addon">🔍</span>
+          >
+          <span class="input-group-text" id="search-addon">Buscar</span>
         </div>
 
         &nbsp;
-
       </div>
 
       <div>
-
-        <div *ngIf="filteredProducts.length === 0" class="alert alert-light mt-2">
-          No se encontraron productos que coincidan con "{{filterTerm}}"
+        <div *ngIf="!spinner && filterTerm && filteredProducts.length === 0" class="alert alert-light mt-2">
+          No se encontraron productos que coincidan con "{{ filterTerm }}"
         </div>
-        <div *ngIf="listProduct==[]" class="alert alert-light mt-2">
-         Cargando Productos...
+        <div *ngIf="!spinner && !filterTerm && listProduct.length === 0" class="alert alert-light mt-2">
+          No hay productos para mostrar.
         </div>
       </div>
 
@@ -48,10 +47,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of filteredProducts">
-            <td>{{item.title}}</td>
-            <td>{{item.description}}</td>
-            <td>$ {{item.price}}</td>
-            <td>* {{item.numberKey}}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.description.slice(0, 20) }}...</td>
+            <td>$ {{ item.price }}</td>
+            <td>* {{ item.numberKey }}</td>
             <td>
               <button *appHasRole="'admin'" (click)="editProduct(item.id)" class="btn btn-warning" title="editar">
                 <img src="ajustes.png" alt="ico">
@@ -60,7 +59,36 @@
           </tr>
         </tbody>
       </table>
-       <app-spinner *ngIf="spinner"></app-spinner>
+
+      <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-2">
+        <!-- <div class="d-flex align-items-center gap-2">
+          <label for="page-size" class="mb-0">Mostrar</label>
+          <select
+            id="page-size"
+            class="form-select form-select-sm"
+            style="width: auto;"
+            [ngModel]="pagination.limit"
+            (ngModelChange)="changePageSize($event)"
+          >
+            <option [ngValue]="8">8</option>
+
+
+          </select>
+          <span>por pagina</span>
+        </div> -->
+
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-outline-secondary btn-sm" (click)="previousPage()" [disabled]="!hasPreviousPage || spinner">
+            Anterior
+          </button>
+          <span>Pagina {{ currentPage }}</span>
+          <button class="btn btn-outline-secondary btn-sm" (click)="nextPage()" [disabled]="!hasNextPage || spinner">
+            Siguiente
+          </button>
+        </div>
+      </div>
+
+      <app-spinner *ngIf="spinner"></app-spinner>
     </div>
   </div>
 </body>

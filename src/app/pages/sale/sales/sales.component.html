@@ -27,10 +27,7 @@
         </div>
       </div>
 
-      <div *ngIf="spinnerVisible" class="text-center my-5">
-        <app-spinner></app-spinner>
-        <p class="text-muted mt-2">Cargando Ventas...</p>
-      </div>
+
 
       <div *ngIf="!spinnerVisible && filteredSales.length === 0 && filterTerm"
            class="alert alert-warning shadow-sm mx-auto" style="max-width: 900px;">
@@ -86,6 +83,36 @@
               </table>
             </div>
           </div>
+        </div>
+      </div>
+         <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-2">
+        <!-- <div class="d-flex align-items-center gap-2">
+          <label for="page-size" class="mb-0">Mostrar</label>
+          <select
+            id="page-size"
+            class="form-select form-select-sm"
+            style="width: auto;"
+            [ngModel]="pagination.limit"
+            (ngModelChange)="changePageSize($event)"
+          >
+            <option [ngValue]="8">8</option>
+
+
+          </select>
+          <span>por pagina</span>
+        </div> -->
+  <div *ngIf="spinnerVisible" class="text-center my-5">
+        <app-spinner></app-spinner>
+        <p class="text-muted mt-2">Cargando Ventas...</p>
+      </div>
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-outline-secondary btn-sm" (click)="previousPage()" [disabled]="!hasPreviousPage || spinnerVisible">
+            Anterior
+          </button>
+          <span>Pagina {{ currentPage }}</span>
+          <button class="btn btn-outline-secondary btn-sm" (click)="nextPage()" [disabled]="!hasNextPage || spinnerVisible">
+            Siguiente
+          </button>
         </div>
       </div>
 
