@@ -73,10 +73,10 @@
 
 <p class="mt-3"> Ya tengo cuenta <a href="/logIn">Ingresar</a></p>
 
-
-
-  </div>
-</div>
 <div class="alert">
 <p id="alertTexto" [innerHTML]="alertTexto"></p>
 </div>
+<app-spinner *ngIf="loading"></app-spinner>
+  </div>
+</div>
+

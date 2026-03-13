@@ -7,65 +7,69 @@ import { SpinnerComponent } from '../spinner/spinner.component';
 import { NgIf } from '@angular/common';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, SpinnerComponent, NgIf,CommonModule],
+  imports: [NavbarComponent, FormsModule, SpinnerComponent, NgIf, CommonModule],
   templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.css'
+  styleUrl: './forgot-password.component.css',
 })
 export class ForgotPasswordComponent implements OnInit {
-  email: string = "";
-  alertTexto: string = "";
-  veryfiTexto: string = "";
-  loading:boolean=false;
-  loadingImg:boolean=false;
+  email: string = '';
+  alertTexto: string = '';
+  veryfiTexto: string = '';
+  loading: boolean = false;
+  loadingImg: boolean = false;
 
-  constructor (private _userService: UserService, private router: Router) { }
+  constructor(
+    private _userService: UserService,
+    private router: Router,
+  ) {}
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
   sendEmail() {
-    this.veryfiTexto=""
-    this.alertTexto=""
+    this.loading = true;
+    this.veryfiTexto = '';
+    this.alertTexto = '';
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (this.email == "") {
-      this.alertTexto = "Es necesario el correo electronico de tu cuenta"
-      return
+    if (this.email == '') {
+      this.loading = false;
+      this.alertTexto = 'Es necesario el correo electronico de tu cuenta';
+      return;
     }
 
     if (!emailRegex.test(this.email)) {
+      this.loading = false;
       this.alertTexto = 'Correo invalido';
-      return
+      return;
     }
-    this.loading=true
+    this.loading = true;
 
     this._userService.reqPassword(this.email).subscribe({
       next: (res) => {
-        console.log(res)
-  if (res.status == 201) {
-console.log(res);
-  this.veryfiTexto="Se ha enviado un correo a tu cuenta con las instrucciones para restablecer tu contraseña";
- this.loading=false
- this.loadingImg=true
- }
+        console.log(res);
+        if (res.status == 201) {
+          console.log(res);
+          this.veryfiTexto =
+            'Se ha enviado un correo a tu cuenta con las instrucciones para restablecer tu contraseña';
+          this.loading = false;
+          this.loadingImg = true;
+        }
       },
       error: (err) => {
-        this.loading=false
+        this.loading = false;
+        console.log(err.status)
         if (err.status == 404) {
-    this.alertTexto = "El correo no esta registrado" }else{
-      this.alertTexto = "Error en el servidor, intente mas tarde"
+          this.alertTexto = 'El correo no esta registrado';
         }
 
-    }
-  })
-
-
+        if (err.status == 429) {
+          this.alertTexto = 'Puede volver a generar un correo en unos minutos';
+        } else {
+          this.alertTexto = 'Error en el servidor, intente mas tarde';
+        }
+      },
+    });
   }
-
-
-
 }

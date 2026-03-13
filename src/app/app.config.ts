@@ -31,6 +31,7 @@ export const appConfig: ApplicationConfig = {
       provide: 'SocialAuthServiceConfig',
       useValue: {
         autoLogin: false,
+        oneTapEnabled: false,
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,

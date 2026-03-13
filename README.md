@@ -1,33 +1,53 @@
-# FRONTEND
+# ClaudPOSEPR · Frontend Angular
+La aplicación de `ClaudPOSEPR`. Se construye sobre Angular 18 y usa Bootstrap 5 para el layout responsivo.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.20.
+## Tecnologías clave
+- Angular CLI 18.2.20
+- Angular 18.x + RxJS 7.8
+- Bootstrap 5.3.8
+- `@abacritt/angularx-social-login` y `ng-recaptcha` para autenticación y validaciones
+- Librerías ZXing / `@zxing/ngx-scanner` para capturar códigos QR desde el navegador
 
-## Development server
+## Requisitos previos
+1. Tener instalado Node.js (LTS 18 o 20) y npm (>=10). Si usas `nvm`, alinea la versión con `package.json`.
+2. Angular CLI 18.2.20 (global o usar `npx ng` desde el proyecto).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Puesta en marcha
+```bash
+cd Frontend
+npm install
+```
+Luego puedes ejecutar los comandos útiles descritos abajo sin salir del directorio.
 
-## Code scaffolding
+## Usuario demo (ADMIN)
+* fernado4974@gmail.com (USER)
+* fernando123A (PASSWORD)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Comandos frecuentes
+- `npm start` → `ng serve` con recarga en caliente en `http://localhost:4200/`.
+- `npm run build` → construye los artefactos en `dist/`.
+- `npm run watch` → recompila automáticamente en modo desarrollo.
+- `npm test` → ejecuta las pruebas unitarias con Karma.
+- `npx ng lint` → revisa estilo y errores de TypeScript. (Angular CLI lo ofrece por defecto aunque no esté en `scripts`.)
+- `npx ng e2e` → prepara el runner de e2e si habilitas un paquete, por ejemplo `@angular-devkit/build-angular` con Cypress o Protractor.
 
-## Build
+> **Tip:** agrega `--configuration production` cuando ejecutes `npm run build` para generar una versión optimizada para despliegue.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Organización relevante
+- `src/app`: módulos, rutas y componentes que consumen los servicios de socket.io y los adaptadores de login social.
+- `src/assets`: íconos, PNG y otros recursos estáticos expuestos en `public/`.
+- `public/`: carpeta sincronizada con `angular.json` para archivos “copy assets” (favicon, policies, etc.).
+- `.angular/` y `dist/`: directorios generados; no se versionan excepto cuando exportas una build para revisión.
 
-## Running unit tests
+## Flujo recomendado
+1. Usa `npm start` durante el desarrollo funcional.
+2. Para verificar integraciones, corre `npm test` y un `npx ng lint`.
+3. Antes del deploy, ejecuta `npm run build -- --configuration production`.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Capturas de referencia
+| Vista | Descripción |
+| --- | --- |
+| ![iPad Pro](image.png) | Diseño de la pantalla principal adaptada a iPad Pro. |
+| ![iPad Air](image-1.png) | Versión del layout para iPad Air. |
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-
-## VIEW IPAD PRO  
-![alt text](image.png)
-
-## VIEW IPAD AIR
-![alt text](image-1.png)
+Si necesitas nuevas vistas, sustituye las imágenes en este directorio y actualiza la tabla.

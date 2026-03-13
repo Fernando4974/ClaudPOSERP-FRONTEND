@@ -85,9 +85,9 @@ export class UserComponent implements OnInit {
     if (token) {
     this._userService.getUser().subscribe({
    next: (data) => {
-    console.log('data',data)
+
   const user = Array.isArray(data) ? data[0] : data;
-    console.log('user : ',user)
+    // console.log('user : ',user)
 
   const formattedData = {
     ...user,
@@ -101,7 +101,7 @@ export class UserComponent implements OnInit {
   this.dataToSend= formattedData
 
   this.userForm.patchValue(formattedData);
-    console.log('form data : ',formattedData)
+    // console.log('form data : ',formattedData)
 },
       error: (err)=> {
  this.alertText='error al cargar el usuario actual'
@@ -126,7 +126,7 @@ export class UserComponent implements OnInit {
   executeActionUpdate(): void {
     this.showModalUpdate = false;
     this.visibleSpinner = true;
-    console.log(this.dataToSend)
+    // console.log(this.dataToSend)
     this.updateUser()
 
 
@@ -147,7 +147,7 @@ export class UserComponent implements OnInit {
   comeBack(): void {
     this.showModalExit = false;
     // Lógica para redirigir, ej: this.router.navigate(['/users-list']);
-    console.log('Redirigiendo a la lista de usuarios...');
+    // console.log('Redirigiendo a la lista de usuarios...');
   }
 updateUser(): void {
   if (this.userForm.invalid) return;
@@ -169,7 +169,7 @@ updateUser(): void {
     ...(rawValue.password ? { password: rawValue.password } : {})
   };
 
-  console.log('Objeto corregido enviado al Back:', updateData);
+  // console.log('Objeto corregido enviado al Back:', updateData);
 
   this.visibleSpinner = true;
 

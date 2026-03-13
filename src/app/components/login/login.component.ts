@@ -112,11 +112,14 @@ export class LoginComponent implements OnInit {
   }
 
   onError(errorDetails: any) {
+    this.loading = false;
+    this.alertTexto = 'Error al cargar reCAPTCHA. Por favor, inténtalo de nuevo.';
     console.error('Error de reCAPTCHA:', errorDetails);
   }
 
   login() {
     if (!this.recaptchaToken) {
+      this.loading = false;
       this.alertTexto = 'Por favor, completa el reCAPTCHA';
       return;
     }
@@ -134,14 +137,18 @@ export class LoginComponent implements OnInit {
       return;
     }
     if (this.password == '' || this.email == '') {
+      this.loading = false;
       this.alertTexto = 'Faltan campos por llenar';
       return;
     }
     if (!emailRegex.test(this.email)) {
+      this.loading = false;
       this.alertTexto = 'Correo invalido';
       return;
     }
     if (this.password.length <= 3) {
+      this.loading = false;
+
       this.alertTexto = 'Error de contrasena';
       return;
     }
@@ -158,7 +165,7 @@ export class LoginComponent implements OnInit {
       this._userService.Login(user).subscribe({
         next: (data) => {
           // validar diferentes estado 2xx
-        
+
           const token = data.token;
 
           localStorage.setItem('token', token);

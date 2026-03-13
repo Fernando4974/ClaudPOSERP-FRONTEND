@@ -6,12 +6,13 @@ import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { NextFunction } from 'express';
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 
 @Component({
   selector: 'app-sing-in',
   standalone: true,
-  imports: [NavbarComponent, FormsModule,RouterOutlet],
+  imports: [NavbarComponent, FormsModule,RouterOutlet, SpinnerComponent],
   templateUrl: './sing-in.component.html',
   styleUrl: './sing-in.component.css',
 })
@@ -23,11 +24,14 @@ export class SingInComponent implements OnInit {
   repeatpassword: string = '';
   credentials: string = '';
   alertTexto:string='';
+  loading:boolean=false;
   verPassword:boolean=false;
   constructor(private _userService: UserService, private router: Router) {}
   ngOnInit(): void {}
 
   async addUser() {
+    this.alertTexto=""
+    this.loading=true
     if (
       this.name == '' ||
       this.lastname == '' ||
@@ -41,6 +45,7 @@ export class SingInComponent implements OnInit {
 
      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
      if (!emailRegex.test(this.email)) {
+ this.loading=false
       this.alertTexto='Debe ingresar un correo valido'
       return
 
@@ -49,15 +54,17 @@ export class SingInComponent implements OnInit {
 
 
      if (this.password.length<5) {
-      this.alertTexto="Contraseña debe tener almenos 5 caracteres"
+      this.loading=false
+      this.alertTexto="Contraseña debe tener <br> almenos 5 caracteres"
       return
     }
     const passwordRegex= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/
     if (!passwordRegex.test(this.password)) {
-      this.alertTexto='La contraseña debe contener Mayuscula, Minuscula, Numero y minimo 6 digitos'
+      this.alertTexto='La contraseña debe contener <br>Mayuscula, Minuscula, <br>Numero y minimo 6 digitos'
       return
     }
     if (this.password !== this.repeatpassword) {
+       this.loading=false
       this.alertTexto='Contraseñas no coinciden';
       return;
     }
@@ -84,7 +91,8 @@ try {
       },
       error: (err)=>{
         if (err.status==409) {
-          this.alertTexto="Error, el  correo electronico ingresado ya fue registrado anteriormente"
+           this.loading=false
+          this.alertTexto="Error, el  correo electronico ingresado <br> ya fue registrado anteriormente"
           return
         }
         console.log(err)
@@ -94,8 +102,9 @@ try {
 
 
 } catch (error) {
+   this.loading=false
   console.error("error: "+error)
-   alert('The user cant be creates by the  unexpected error' +error)
+   alert('The user cant be created by <br> the  unexpected error' +error)
 }
 
 }

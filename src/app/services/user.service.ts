@@ -23,7 +23,7 @@ export class UserService {
     this.AppUrl=environment.apiUrl;
     this.APIUrlRegister='auth/register'
     this.APIUrlLogin='auth/login'
-    this.APIUrlReqReset='auth/password-recovery'
+    this.APIUrlReqReset='auth/recover-password'
     this.APIUrlPasswordReset='auth/password-reset'
     this.APIUrlGetUser='auth/user-update'
     this.APIUrlUpdateThisUser='auth/update-user'
