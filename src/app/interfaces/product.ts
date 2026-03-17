@@ -49,4 +49,5 @@ export interface GetAllProduct {
   slug: string,
   numberKey?: number,
   count?: number,
+  images?:[]
 }

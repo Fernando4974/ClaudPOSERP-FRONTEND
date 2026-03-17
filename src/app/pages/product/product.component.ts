@@ -23,6 +23,7 @@ export class ProductComponent implements OnInit {
 
   listProduct: GetAllProduct[] = [];
   filteredProducts: GetAllProduct[] = [];
+  imagesList = [];
   filterTerm: string = '';
   pagination: PaginatioDto = { limit: 8, offset: 0 };
   spinner: boolean = false;
@@ -36,6 +37,7 @@ export class ProductComponent implements OnInit {
   ) {
     this._navService.setExitButtonVisibility(true);
   }
+
 
   ngOnInit(): void {
     this.getAll();
@@ -56,10 +58,19 @@ export class ProductComponent implements OnInit {
   }
 
   getAll(previousOffset?: number) {
+    interface ProductImage {
+      url: string;
+    }
+
+    interface Product {
+      id: string;
+      title: string;
+      images: ProductImage[];
+    }
     this.spinner = true;
 
     this.productService.getAllProducts(this.pagination).subscribe({
-      next: (data) => {
+      next: (data: any) => {
         if (data.length === 0 && previousOffset !== undefined) {
           this.pagination.offset = previousOffset;
           this.isLastPage = true;
@@ -68,7 +79,14 @@ export class ProductComponent implements OnInit {
         }
 
         const limit = this.pagination.limit || 10;
+        console.log(data)
         this.listProduct = data;
+        this.imagesList = data.map((product: Product) => {
+          return product.images && product.images.length > 0 ?
+            product.images[0].url : 'assets/no-image.jpg'
+
+        });
+        console.log('images:', this.imagesList)
         this.isLastPage = data.length < limit;
         this.applyFilter();
         this.spinner = false;
@@ -88,8 +106,8 @@ export class ProductComponent implements OnInit {
     }
 
     this.filteredProducts = this.listProduct.filter(product =>
-      product.title.toLowerCase().includes(term) ||
-      product.description.toLowerCase().includes(term)
+      (product.title || '').toLowerCase().includes(term) ||
+      (product.description || '').toLowerCase().includes(term)
     );
   }
 
@@ -134,4 +152,21 @@ export class ProductComponent implements OnInit {
   editProduct(id: string) {
     this.router.navigate(['/updateProduct', id]);
   }
+
+  getImage(product: any): string {
+    return product && product.images && product.images.length > 0
+      ? product.images[0].url
+      : '/camera-icon.png';
+  }
+
+onImageError(event: Event) {
+  const img = event.target as HTMLImageElement;
+  const fallbackIcon = '/camera-icon.png'; // Asegúrate de que la ruta sea accesible desde assets
+
+  // Si la imagen que falló NO incluye 'cloudinary' en su URL,
+  // o si simplemente falló la carga (independientemente del origen)
+  if (!img.src.includes('cloudinary') || img.src !== fallbackIcon) {
+    img.src = fallbackIcon;
+  }
+}
 }

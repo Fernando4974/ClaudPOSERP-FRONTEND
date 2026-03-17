@@ -120,7 +120,13 @@ export class UpdateProductComponent implements OnInit {
             this.sendUpdate(productToSend);
           }
         },
-        error: () => this.handleError("Error al verificar la tecla")
+        error: (error) => {
+
+          console.log(error)
+          this.handleError("Error al verificar la tecla")
+        }
+
+
       });
     } else {
       this.sendUpdate(productToSend);
@@ -138,6 +144,7 @@ export class UpdateProductComponent implements OnInit {
         setTimeout(() => this.comeBack(), 1500);
       },
       error: (err) =>{
+         console.log(err);
         if (err.status === 409) {
           this.handleError("Ya existe un Producto con el mismo nombre o código de Barras");
         } else {

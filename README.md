@@ -15,7 +15,7 @@ La aplicación de `ClaudPOSEPR`. Se construye sobre Angular 18 y usa Bootstrap 5
 ## Puesta en marcha
 ```bash
 cd Frontend
-npm install
+npm install --legacy-peer-deps
 ```
 Luego puedes ejecutar los comandos útiles descritos abajo sin salir del directorio.
 
