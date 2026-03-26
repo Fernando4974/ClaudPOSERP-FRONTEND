@@ -43,26 +43,30 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._nav.setExitButtonVisibility(false);
- this._authService.authState.subscribe((user) => {
-    if (user) {
+  this._nav.setExitButtonVisibility(false);
+
+  this._authService.authState.subscribe((user) => {
+    // Solo loguear si hay usuario Y si no estamos en medio de un logout
+    // Muchas veces, al cargar el componente, la librería 'recuerda' al usuario.
+    if (user && !sessionStorage.getItem('logging_out')) {
       this.loading = true;
-
-
-      // Enviar el token a tu backend en Render
       this._userService.loginWithGoogle(user.idToken).subscribe({
         next: (res) => {
-          localStorage.setItem('token', res.token);
-          this.router.navigate(['/dashboard']);
+          console.log(res)
+           // El backend ahora devuelve `token` y `refreshToken` directamente
+           sessionStorage.setItem('token', res.token);
+           sessionStorage.setItem('refreshToken', res.refreshToken);
+           sessionStorage.setItem('user_name', res.nameUser || res.userName || '');
+           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           this.loading = false;
-          this.alertTexto = 'Acceso denegado: Usuario no autorizado';
+          this.alertTexto = 'Acceso denegado';
         }
       });
     }
   });
-  }
+}
 
  loginWithGoogle(): void {
   this.alertTexto = '';
@@ -79,7 +83,9 @@ export class LoginComponent implements OnInit {
         next: (res) => {
           this.loading = false;
 
-          localStorage.setItem('token', res.token);
+           sessionStorage.setItem('token', res.token);
+           sessionStorage.setItem('refreshToken', res.refreshToken);
+           sessionStorage.setItem('user_name', res.nameUser || res.userName || '');
           this.router.navigate(['/pos-register']);
         },
         error: (err) => {
@@ -165,10 +171,12 @@ export class LoginComponent implements OnInit {
       this._userService.Login(user).subscribe({
         next: (data) => {
           // validar diferentes estado 2xx
-
+console.log(data)
           const token = data.token;
 
-          localStorage.setItem('token', token);
+           sessionStorage.setItem('token', token);
+           sessionStorage.setItem('refreshToken', data.refreshToken);
+           sessionStorage.setItem('user_name', data.nameUser || data.name || '');
 
           this.loading = false;
           this.router.navigate(['/dashboard']);

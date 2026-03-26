@@ -2,7 +2,7 @@ import { CanActivateFn } from '@angular/router';
 import { Router } from '@angular/router';
 import { inject } from '@angular/core';
 export const tokenGuard: CanActivateFn = (route, state) => {
-   const token = localStorage.getItem('token');
+   const token =  sessionStorage.getItem('token');
   const router = inject(Router);
 
   if (token) {

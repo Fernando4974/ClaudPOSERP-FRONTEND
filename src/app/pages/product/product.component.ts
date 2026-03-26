@@ -79,20 +79,20 @@ export class ProductComponent implements OnInit {
         }
 
         const limit = this.pagination.limit || 10;
-        console.log(data)
+        //console.log(data)
         this.listProduct = data;
         this.imagesList = data.map((product: Product) => {
           return product.images && product.images.length > 0 ?
             product.images[0].url : 'assets/no-image.jpg'
 
         });
-        console.log('images:', this.imagesList)
+        //console.log('images:', this.imagesList)
         this.isLastPage = data.length < limit;
         this.applyFilter();
         this.spinner = false;
       },
       error: (err) => {
-        console.log(err);
+        //console.log(err);
         this.spinner = false;
       }
     });

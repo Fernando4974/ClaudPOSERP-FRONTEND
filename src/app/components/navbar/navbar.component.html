@@ -3,12 +3,32 @@
     <div>
     <img src="cloud (1).png" id="iconoNube" style="max-width: 40px;" alt="notFund">
     <a class="navbar-brand mb-3" > ClaudPosERP</a>
+
+
     </div>
 
     <form *ngIf="navService.showExitButton()"  class="d-flex" role="search">
-<a style="position: relative; " class="navbar-brand mb-0" >{{this.role?.replace('[', '')?.replace(']', '')?.replaceAll('"', '')?.toUpperCase()}}</a>
-      <a class="btn btn-outline-success" type="submit" href="/logIn" (click)="logOut()">Salir</a>
+       <a
+    style="position: relative; color: greenyellow; font-size: small; align-content: center;"
+    class="navbar-brand mb-0" >
+       {{this.role?.replace('[', '')?.replace(']', '')?.replaceAll('"', '')?.toUpperCase()}}
+      </a>
+
+      <a style="position: relative; " class="navbar-brand mb-0" >{{this.userName?.replaceAll('"', '')?.toUpperCase()}}</a>
+
+      <a class="btn btn-outline-danger" type="submit" (click)="modal()">Salir</a>
+
     </form>
   </div>
+  <app-confirm-modal-component *ngIf="modalView"
+  title="Cerrar Sesion"
+  message=""
+  btnOkText="Salir"
+
+  btnCancelText="Cancelar"
+
+  (onCancel)="modalView=false"
+  (onConfirm)="logOut()">></app-confirm-modal-component>
+
 </nav>
 

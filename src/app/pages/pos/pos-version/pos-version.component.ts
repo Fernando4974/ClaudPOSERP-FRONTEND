@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from "../../../components/navbar/navbar.component";
 import { Route, Router } from '@angular/router';
 import { SidebarComponent } from '../../../components/sidebar/sidebar.component';
+import { NavBarService } from '../../../services/navBar/navBar.service';
 
 @Component({
   selector: 'app-pos-version',
@@ -11,7 +12,9 @@ import { SidebarComponent } from '../../../components/sidebar/sidebar.component'
   styleUrl: './pos-version.component.css'
 })
 export class PosVersionComponent implements OnInit {
-  constructor( private router: Router) { }
+  constructor( private router: Router, public _navNarService : NavBarService) {
+    this._navNarService.setExitButtonVisibility(true)
+   }
 
   ngOnInit(): void {
 

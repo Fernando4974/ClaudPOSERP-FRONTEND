@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { User, UserLogin } from '../interfaces/user';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +21,12 @@ export class UserService {
   private APIUrlPasswordReset:string;
   private APIUrlGetUser:string;
   private APIUrlUpdateThisUser:string;
-  constructor(private readonly http: HttpClient) {
+  private APIRefreshToken:string;
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router,
+    private readonly _AuthService: SocialAuthService,
+  ) {
     this.AppUrl=environment.apiUrl;
     this.APIUrlRegister='auth/register'
     this.APIUrlLogin='auth/login'
@@ -27,23 +34,25 @@ export class UserService {
     this.APIUrlPasswordReset='auth/password-reset'
     this.APIUrlGetUser='auth/user-update'
     this.APIUrlUpdateThisUser='auth/update-user'
+    this.APIRefreshToken='auth/refresh'
   }
 
    singIn(user:User):Observable<any>{
     return  this.http.post(`${this.AppUrl}${this.APIUrlRegister}`,user)
-
   }
   Login(user: UserLogin): Observable<any> {
     return this.http.post(`${this.AppUrl}${this.APIUrlLogin}`, user).pipe(
       tap((response: any) => {
+        console.log('response;', response)
         // Guardamos el usuario completo (que trae los roles) en el storage
-        localStorage.setItem('user_data', JSON.stringify(response.userRoles));
+         sessionStorage.setItem('user_data', JSON.stringify(response.userRoles));
+         sessionStorage.setItem('user_name', response.nameUser || response.userName || '');
         this.userSubject.next(response.userRoles);
       })
     );
   }
 getUserRoles(): string {
-  const userData = localStorage.getItem('user_data');
+  const userData =  sessionStorage.getItem('user_data');
   console.log(userData)
   if (!userData) return 'Role Not Found';
 
@@ -54,7 +63,7 @@ getUserRoles(): string {
   }
 
   hasRole(role: string): boolean {
-    const userRole = localStorage.getItem('user_data')!;
+    const userRole =  sessionStorage.getItem('user_data')!;
     if (userRole.includes(role)) {
     return true
     }
@@ -82,10 +91,24 @@ getUserRoles(): string {
   loginWithGoogle(token: string): Observable<any> {
     return this.http.post(`${this.AppUrl}auth/google-login`, { token }).pipe(
       tap((response: any) => {
+
         // Guardamos el usuario completo (que trae los roles) en el storage
-        localStorage.setItem('user_data', JSON.stringify(response.userRoles));
+        sessionStorage.setItem('user_data', JSON.stringify(response.userRoles));
+        sessionStorage.setItem('user_name', response.nameUser || response.userName || '');
         this.userSubject.next(response.userRoles);
       })
     );
   }
+  refreshToken(refreshToken: string): Observable<any>{
+    // El backend espera { refresh_token: string } en el body
+    return this.http.post(`${this.AppUrl}${this.APIRefreshToken}`, { refresh_token: refreshToken });
+  }
+  logOut(){
+    localStorage.clear()
+    sessionStorage.clear()
+    this._AuthService.signOut().catch(err=> { throw new Error('logOut Error: ', err) })
+    this.router.navigate(['/logIn'])
+
+  };
+
 }

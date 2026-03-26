@@ -41,7 +41,7 @@ export class ViewSalesComponent implements OnInit{
   ngOnInit(): void {
     // Obtenemos el ID de la URL (ej: /sales/abc-123)
     this.idSale = this.route.snapshot.paramMap.get('id') || '';
-    const userRole=localStorage.getItem('user_data')
+    const userRole = sessionStorage.getItem('user_data')
     if (!userRole?.includes('admin')) {
 this.deteleButtonVisible=false
     }
@@ -58,7 +58,7 @@ this.deteleButtonVisible=false
     this.saleService.getSelectSale(this.idSale).subscribe({
       next: (data: Sale) => {
         this.sale = data;
-    
+
         this.visibleSpinner = false;
         this.loading = true; // Habilita los botones de acción
       },

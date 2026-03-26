@@ -15,6 +15,7 @@ export class ConfirmModalComponentComponent {
   @Input() btnCancelText: string = 'Cancelar';
   // En el Modal
  @Input() okBtnClass: string = 'btn-primary'; // Clase CSS por defecto
+//  @Input() cancelBtnClass: string = 'btn-danger'; // Clase CSS por defecto
 
   @Output() onConfirm = new EventEmitter<void>();
   @Output() onCancel = new EventEmitter<void>();

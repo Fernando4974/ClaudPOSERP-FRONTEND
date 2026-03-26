@@ -222,29 +222,53 @@ onKeyClick(buttonNumber: number) {
 passwordAdmin: string = '';
 passwordCorrecta: string = '1234'; // Aquí pones tu clave de gerente
 
-// Modificamos el método original para que solo prepare el terreno
+// // Modificamos el método original para que solo prepare el terreno
+// confirmarBorrado() {
+//   // Si no hay nada que borrar, no pedimos clave
+//   if (this.filterTerm.length === 0 && this.carrito.length === 0) return;
+
+//   // Si es solo borrar texto del buscador, lo permitimos sin clave
+//   if (this.filterTerm.length > 0) {
+//     this.ejecutarBorradoReal();
+//     return;
+//   }
+
+//   // Si es borrar un producto del carrito, abrimos el modal
+//   const modalElement = document.getElementById('modalPassword');
+//   if (modalElement) {
+//     this.isModalOpen = true;
+//     const modal = new (window as any).bootstrap.Modal(modalElement);
+//     this.passwordAdmin = ''; // Limpiamos el input
+//     modal.show();
+//     setTimeout(() => {
+//        const input = document.querySelector('#passwordInput') as HTMLElement;
+//        input?.focus();
+//     }, 500);
+
+//   }
+// }
 confirmarBorrado() {
-  // Si no hay nada que borrar, no pedimos clave
   if (this.filterTerm.length === 0 && this.carrito.length === 0) return;
 
-  // Si es solo borrar texto del buscador, lo permitimos sin clave
   if (this.filterTerm.length > 0) {
     this.ejecutarBorradoReal();
     return;
   }
 
-  // Si es borrar un producto del carrito, abrimos el modal
   const modalElement = document.getElementById('modalPassword');
   if (modalElement) {
     this.isModalOpen = true;
-    const modal = new (window as any).bootstrap.Modal(modalElement);
     this.passwordAdmin = ''; // Limpiamos el input
-    modal.show();
-    setTimeout(() => {
-       const input = document.querySelector('#modalPassword input') as HTMLElement;
-       input?.focus();
-    }, 500);
 
+    const modal = new (window as any).bootstrap.Modal(modalElement);
+
+    // ESCUCHAR EL EVENTO DE BOOTSTRAP (Mejor que setTimeout)
+    modalElement.addEventListener('shown.bs.modal', () => {
+      const input = modalElement.querySelector('input') as HTMLElement;
+      input?.focus();
+    }, { once: true }); // { once: true } asegura que el listener se borre tras usarse una vez
+
+    modal.show();
   }
 }
 
@@ -455,6 +479,8 @@ calcularTotal(): number {
 
 crearVenta(metodoPago : string = 'EFECTiVO') {
   if (this.carrito.length === 0) return;
+    const fecha = new Date().toLocaleDateString();
+  const hora = new Date().toLocaleTimeString();
 
   const nuevaVenta = {
     total: this.calcularTotal(), // Ya incluye el IVA configurado
@@ -466,7 +492,10 @@ crearVenta(metodoPago : string = 'EFECTiVO') {
       quantity: p.count || 1,
       priceAtSale: p.price
     }))
+
+
   };
+  console.log(nuevaVenta);
 
   this._saleService.createSale(nuevaVenta).subscribe({
     next: (res) => {
@@ -476,7 +505,73 @@ crearVenta(metodoPago : string = 'EFECTiVO') {
       this.mostrarMensajeTemporal("VENTA EXITOSA");
 
       setTimeout(() => {
-        if (this.receiptFlag) window.print();
+        if (this.receiptFlag){
+        // window.print();
+        ///
+        // New receipt format
+        ///
+          const filasProductos = this.carrito.map(v => `
+    <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding: 5px 0; font-size: 12px;">
+      <span>#${v.title}</span>
+      <span>$${v.price}</span>
+      <span> x ${v.count}</span>
+      <span>  -- $${((v.price)*(v.count!)).toFixed(2)}</span>
+
+    </div>
+  `).join('');
+        const ventanaImpresion = window.open('', '_black');
+        ventanaImpresion?.document.write(`
+    <html>
+      <head>
+        <title>Reporte de Venta - ${fecha}</title>
+        <style>
+          body { font-family: 'Courier New', Courier, monospace; width: 80mm; margin: 0; padding: 10px; }
+          h2 { text-align: center; margin-bottom: 5px; font-size: 16px; }
+          .header { text-align: center; margin-bottom: 15px; font-size: 12px; border-bottom: 2px solid #000; padding-bottom: 5px; }
+          .iva { margin-top: 10px; border-top: 1px solid #000; padding-top: 6px; text-align: right; font-size: 16px; font-weight: bold; }
+
+          .total { margin-top: 15px; border-top: 2px solid #000; padding-top: 10px; text-align: right; font-size: 16px; font-weight: bold; }
+          .footer { margin-top: 20px; text-align: center; font-size: 10px; }
+        </style>
+      </head>
+      <body>
+        <h2>REPORTE DE VENTA</h2>
+        <div class="header">
+          Fecha: ${fecha}<br>
+          Hora: ${hora}<br>
+          Productos: ${this.carrito.length}
+        </div>
+        <div class="items">
+          ${filasProductos}
+        </div>
+         <div class="iva">
+          IVA % ${this.impuestoPorcentaje}: $${(nuevaVenta.iva).toFixed(2)}
+        </div>
+        <div class="total">
+          TOTAL VENTA: $${(this.calcularTotal()).toFixed(2)}
+        </div>
+        <div class="footer">
+         -- Gracias por su Visita -- <br>
+        clauderp.netlify.app
+
+        </div>
+      </body>
+    </html>
+  `);
+  ventanaImpresion?.document.close();
+  ventanaImpresion?.focus();
+
+  // Pequeño delay para asegurar que los estilos carguen antes de imprimir
+  setTimeout(() => {
+    ventanaImpresion?.print();
+    ventanaImpresion?.close();
+  }, 250);
+
+
+
+
+
+        }
         this.limpiarCarrito();
         // Resetear scroll al inicio para la siguiente venta
         if (this.myScrollContainer) this.myScrollContainer.nativeElement.scrollTop = 0;
@@ -655,49 +750,60 @@ abrirAyuda() {
 //BARCODE FUNCTIONS
 
  @ViewChild('barcodeInput') barcodeInput!: ElementRef<HTMLInputElement>;
-@HostListener('window:keydown', ['$event'])
-handleGlobalKeyDown(event : KeyboardEvent){
-  // Si la búsqueda está abierta, dejamos que el usuario escriba ahí normalmente
-    if (this.mostrarBusqueda) {
-      return;
-    }
-    if (this.isModalOpen) {
+ @HostListener('window:keydown', ['$event'])
+handleGlobalKeyDown(event: KeyboardEvent) {
+  // Si estamos en búsqueda, modal de password o ayuda, NO forzamos el foco del scanner
+  if (this.mostrarBusqueda || this.isModalOpen || this.showHelpModal) {
     return;
   }
 
-    // Si el foco no está ya en el input del scanner, se lo devolvemos
-    // Evitamos interrumpir si el usuario presiona teclas especiales como F12, Alt, etc.
-    if (document.activeElement !== this.barcodeInput.nativeElement && event.key.length === 1) {
-      this.focusScanner();
-    }
-
-}
-// Función auxiliar para dar foco
-  focusScanner() {
-    if (this.barcodeInput) {
-      this.barcodeInput.nativeElement.focus();
-    }
+  // Si el usuario presiona una tecla de un solo carácter (letras/números)
+  // y no tiene el foco en el input, se lo devolvemos.
+  if (event.key.length === 1 && document.activeElement !== this.barcodeInput.nativeElement) {
+    this.focusScanner();
   }
-onScan(value: string) {
-   console.log(value)
-  if (!value)  return
-  console.log(value)
-  this.onBarcodeClick(value)
-// const productFound= this.listProduct.find(p => p.barcode === value)
-// if (productFound){
-//   this.carrito.push( productFound )
-//   console.log('Producto añadito al carrito' , productFound)
-// }else{
-//   console.log('producto no encontrado')
-//   return
+}
+// @HostListener('window:keydown', ['$event'])
+// handleGlobalKeyDown(event : KeyboardEvent){
+//   // Si la búsqueda está abierta, dejamos que el usuario escriba ahí normalmente
+//     if (this.mostrarBusqueda) {
+//       return;
+//     }
+//     if (this.isModalOpen) {
+//     return;
+//   }
+
+//     // Si el foco no está ya en el input del scanner, se lo devolvemos
+//     // Evitamos interrumpir si el usuario presiona teclas especiales como F12, Alt, etc.
+//     if (document.activeElement !== this.barcodeInput.nativeElement && event.key.length === 1) {
+//       this.focusScanner();
+//     }
+
 // }
+// Función auxiliar para dar foco
+ focusScanner() {
+  // El setTimeout(..., 0) saca la ejecución del ciclo actual de eventos
+  // evitando que el navegador se bloquee en un bucle infinito
+  setTimeout(() => {
+    if (!this.barcodeInput || this.isModalOpen || this.mostrarBusqueda) return;
 
-
+    const input = this.barcodeInput.nativeElement;
+    // Solo damos foco si no lo tiene ya para evitar disparar eventos innecesarios
+    if (document.activeElement !== input) {
+      input.focus();
+    }
+  }, 0);
+}
+onScan(value: string) {
+  if (!value) return;
+  this.onBarcodeClick(value);
+  this.filterTerm = ''; // Limpiar si es necesario
+  this.barcodeInput.nativeElement.value = ''; // Limpiar el input físico
 }
 
 
 
-  // ✅ SIN la palabra "function"
+
   setAngle(deg: number): void {
     const sw = document.getElementById('main-switch') as HTMLElement | null;
     if (sw) {
@@ -762,8 +868,8 @@ onScan(value: string) {
     ventanaImpresion?.print();
     ventanaImpresion?.close();
   }, 250);
-}
 
+}
 }
 
 

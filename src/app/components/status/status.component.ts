@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SalesComponent } from '../../pages/sale/sales/sales.component';
 import { SaleService } from '../../services/sales/sale.service';
 import { NgClass } from "../../../../node_modules/@angular/common/index";
+import { PaginatioDto } from '../../interfaces/pagination.dto';
 
 @Component({
   selector: 'app-status',
@@ -15,6 +16,7 @@ export class StatusComponent implements OnInit {
   mostSaleDay: string = '';
   averageSaleDay: number = 0;
   averageAmountProductSale: number = 0;
+  pagination:PaginatioDto = {limit:3000, offset: 0}
   constructor(private _saleService: SaleService) { }
 
   ngOnInit(): void {
@@ -24,9 +26,10 @@ export class StatusComponent implements OnInit {
     this.getOthers();
   }
   getMostSoldProduct() {
-    this._saleService.getAllSales().subscribe(
-      (sales) => {
 
+    this._saleService.getAllSales(this.pagination).subscribe({
+     next: (sales) => {
+      //console.log(sales)
         const productCount: { [key: string]: number } = {};
         sales.forEach((sale: any) => {
           sale.items.forEach((product: any) => {
@@ -37,14 +40,20 @@ export class StatusComponent implements OnInit {
             }
           });
         });
+        //console.log(productCount)
         const mostSoldProduct = Object.keys(productCount).reduce((a, b) => productCount[a] > productCount[b] ? a : b);
         this.mostSoldProduct = mostSoldProduct;
-       
+
+      },
+      error:(err)=>{
+        console.log(err)
+
       }
-    );
+
+    })
   }
   getOthers() {
-    this._saleService.getAllSales().subscribe(
+    this._saleService.getAllSales(this.pagination).subscribe(
       (sales) => {
 
        const totalItems = sales.reduce((sum: number, sale: any) => sum + parseInt(sale.items.reduce((acc: number, item: any) => acc + item.quantity, 0).toString()), 0);
@@ -58,11 +67,11 @@ export class StatusComponent implements OnInit {
 
   }
  getMostSaleDay() {
-  this._saleService.getAllSales().subscribe(
+  this._saleService.getAllSales(this.pagination).subscribe(
     (response: any) => {
 
       if (!response || !Array.isArray(response) || response.length === 0) {
-        console.warn('La respuesta no es un arreglo o está vacía:', response);
+        console.log('La respuesta no es un arreglo o está vacía:', response);
         this.mostSaleDay = 'Sin datos';
         return;
       }
@@ -104,7 +113,7 @@ formatDate(dateString: string): string {
   return date.toLocaleDateString('es-ES', { weekday: 'long', month: 'short', day: 'numeric' });
 }
 async getAverageSaleDay() {
- await this._saleService.getAllSales().subscribe(
+ await this._saleService.getAllSales(this.pagination).subscribe(
     (response: any) => {
 
             if (!response || !Array.isArray(response) || response.length === 0) {

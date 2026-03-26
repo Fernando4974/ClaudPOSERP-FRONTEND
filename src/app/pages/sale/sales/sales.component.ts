@@ -8,6 +8,7 @@ import { SpinnerComponent } from '../../../components/spinner/spinner.component'
 import { SaleService } from '../../../services/sales/sale.service';
 import { Router } from '@angular/router';
 import { PaginatioDto } from '../../../interfaces/pagination.dto';
+import { NavBarService } from '../../../services/navBar/navBar.service';
 
 @Component({
   selector: 'app-sales',
@@ -24,7 +25,10 @@ export class SalesComponent implements OnInit {
   pagination: PaginatioDto = { limit: 8, offset: 0 };
   isLastPage: boolean = false;
 
-  constructor(private _salesServise: SaleService, private router: Router) {}
+  constructor(private _salesServise: SaleService, private router: Router,public _navNarService : NavBarService) {
+      this._navNarService.setExitButtonVisibility(true)
+     }
+
 
   ngOnInit(): void {
     this.getAll();
@@ -58,7 +62,7 @@ export class SalesComponent implements OnInit {
         }
 
         const limit = this.pagination.limit || 8;
-        this.listSale = value;
+        this.listSale = value
         this.isLastPage = value.length < limit;
         this.search();
         this.spinnerVisible = false;

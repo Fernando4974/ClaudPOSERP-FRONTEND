@@ -23,8 +23,8 @@ public userRole: string | null = '';
   ngOnInit(): void {
 
 
-    if (localStorage.getItem('user_data')) {
-      this.userRole = localStorage.getItem('user_data')
+    if ( sessionStorage.getItem('user_data')) {
+      this.userRole =  sessionStorage.getItem('user_data')
     }
 
 

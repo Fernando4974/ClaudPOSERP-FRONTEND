@@ -43,7 +43,7 @@
                   <tr>
                     <th class="ps-4">ID</th>
                     <th>Estado</th>
-                    <th>Fecha</th>
+                    <th>Fecha - Hora</th>
                     <th>Total</th>
                     <th class="text-end pe-4">Acciones</th>
                   </tr>
@@ -67,7 +67,8 @@
                     </td>
                     <td>
                       <span class="text-muted small">
-                        {{ item.createdAt | date:'short' }}
+                            <!-- 10 horas de dessface -->
+                  {{ item.createdAt | date:'dd-MM-yyyy - hh:mm:ss a':'-1000' }}
                       </span>
                     </td>
                     <td class="fw-semibold text-dark">

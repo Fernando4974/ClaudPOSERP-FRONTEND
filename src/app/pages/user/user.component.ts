@@ -8,6 +8,7 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component'; /
 import { UserService } from '../../services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { HasRoleDirective } from '../../auth/directives/has-role.directive';
+import { NavBarService } from '../../services/navBar/navBar.service';
 
 @Component({
   selector: 'app-user',
@@ -35,6 +36,7 @@ export class UserComponent implements OnInit {
   { value: 'admin', label: 'Administrador' },
   { value: 'user', label: 'Usuario' }
 ];
+
   // Estados de la interfaz
   imagePreview: string | ArrayBuffer | null = null;
   showModalUpdate: boolean = false;
@@ -50,13 +52,16 @@ export class UserComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public _userService: UserService,
-    private route: ActivatedRoute
-) {}
+    private route: ActivatedRoute,
+    public _navNarService : NavBarService) {
+    this._navNarService.setExitButtonVisibility(true)
+   }
+
 
   ngOnInit(): void {
     this.initForm();
     this.loadUserData();
-    const userRole:string = localStorage.getItem('user_data')!;
+    const userRole:string =  sessionStorage.getItem('user_data')!;
     if (!userRole.includes('admin')) {
     this.userForm.get('roles')?.disable();
     this.userForm.get('isActive')?.disable();
@@ -81,7 +86,7 @@ export class UserComponent implements OnInit {
   }
 
   loadUserData(): void {
-     const token = localStorage.getItem('token')
+     const token =  sessionStorage.getItem('token')
     if (token) {
     this._userService.getUser().subscribe({
    next: (data) => {

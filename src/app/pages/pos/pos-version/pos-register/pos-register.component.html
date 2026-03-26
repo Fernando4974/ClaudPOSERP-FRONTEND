@@ -4,7 +4,7 @@
 
     <div class="receipt-area" id="printable-receipt">
       <h6>
-        <strong class="head">Articulo. Can. Precio Unit. Subtotal.</strong>
+        <strong class="head">Art. Can. Precio. Subtotal.</strong>
       </h6>
 
       @if (showTicket === true) {
@@ -589,11 +589,13 @@
       </div>
       <div class="modal-body">
         <p>Ingrese contraseña de administrador para borrar el producto:</p>
-        <input type="password"
+        <input #passwordInput type="password"
                class="form-control bg-secondary text-white border-0"
                [(ngModel)]="passwordAdmin"
+               (blur)="focusScanner()"
                (keyup.enter)="validarYBorrar()"
-               placeholder="****">
+               placeholder="****"
+               >
       </div>
       <div class="modal-footer border-secondary">
         <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
