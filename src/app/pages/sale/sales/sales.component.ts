@@ -81,16 +81,25 @@ export class SalesComponent implements OnInit {
       this.filteredSales = [...this.listSale];
       return;
     }
-
     this.filteredSales = this.listSale.filter(sale => {
-      const idMatch = sale.id?.toString().toLowerCase().includes(term);
-      const totalMatch = sale.total?.toString().includes(term);
-      const dateStr = sale.createdAt ? String(sale.createdAt).toLowerCase() : '';
-      const dateMatch = dateStr.includes(term);
-      const statusMatch = sale.status?.toLowerCase().includes(term);
+  // Aseguramos que el término de búsqueda esté en minúsculas para una comparación insensible
+  const searchTerm = term.toLowerCase();
 
-      return idMatch || totalMatch || dateMatch || statusMatch;
-    });
+  // Convertimos la fecha a string y verificamos si incluye el término
+  const dateStr = sale.createdAt ? String(sale.createdAt).toLowerCase() : '';
+
+  return dateStr.includes(searchTerm);
+});
+
+    // this.filteredSales = this.listSale.filter(sale => {
+    //   const idMatch = String(sale.id?.toString()).toLowerCase().includes(term);
+    //   const totalMatch = sale.total?.toString().includes(term);
+    //   const dateStr = sale.createdAt ? String(sale.createdAt).toLowerCase() : '';
+    //   const dateMatch = dateStr.includes(term);
+    //   const statusMatch = sale.status?.toLowerCase().includes(term);
+
+    //   return idMatch || totalMatch || dateMatch || statusMatch;
+    // });
   }
 
   editSale(item: string) {

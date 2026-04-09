@@ -62,13 +62,13 @@ valideNumberKey(numberKey:string){
   this._serviceProduct._findNumberKey(numberKey).subscribe({
     next: (data) =>{
       console.log(this.numberKeyExist)
-console.log('inside next valide number key')
-console.log(data)
+//console.log('inside next valide number key')
+//console.log(data)
       this.numberKeyExist = data.exist
-      console.log(this.numberKeyExist)
+      //console.log(this.numberKeyExist)
     },
     error: (err) => {
-      console.log(err)
+     // console.log(err)
 
     },
 

@@ -52,11 +52,11 @@ export class LoginComponent implements OnInit {
       this.loading = true;
       this._userService.loginWithGoogle(user.idToken).subscribe({
         next: (res) => {
-          console.log(res)
+         // console.log(res)
            // El backend ahora devuelve `token` y `refreshToken` directamente
            sessionStorage.setItem('token', res.token);
            sessionStorage.setItem('refreshToken', res.refreshToken);
-           sessionStorage.setItem('user_name', res.nameUser || res.userName || '');
+           sessionStorage.setItem('user_name', res.user_name );
            this.router.navigate(['/dashboard']);
         },
         error: (err) => {
@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
 
            sessionStorage.setItem('token', res.token);
            sessionStorage.setItem('refreshToken', res.refreshToken);
-           sessionStorage.setItem('user_name', res.nameUser || res.userName || '');
+           sessionStorage.setItem('user_name', res.user_name);
           this.router.navigate(['/pos-register']);
         },
         error: (err) => {
@@ -171,19 +171,19 @@ export class LoginComponent implements OnInit {
       this._userService.Login(user).subscribe({
         next: (data) => {
           // validar diferentes estado 2xx
-console.log(data)
+//console.log(data)
           const token = data.token;
 
            sessionStorage.setItem('token', token);
            sessionStorage.setItem('refreshToken', data.refreshToken);
-           sessionStorage.setItem('user_name', data.nameUser || data.name || '');
+           sessionStorage.setItem('user_name', data.user_name );
 
           this.loading = false;
           this.router.navigate(['/dashboard']);
         },
         error: (err) => {
           this.loading = false;
-          console.log(err);
+          //console.log(err);
           if (err.status === 401) {
             this.alertTexto = 'Contrasena Incorrecta';
           }

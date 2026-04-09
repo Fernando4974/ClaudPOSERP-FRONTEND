@@ -26,7 +26,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               token: sessionStorage.getItem('token'),
               Rtoken: sessionStorage.getItem('refreshToken'),
             };
-            console.log(sesions)
+            //console.log(sesions)
             const retryReq = req.clone({
               setHeaders: { Authorization: `Bearer ${res.token}` },
             });

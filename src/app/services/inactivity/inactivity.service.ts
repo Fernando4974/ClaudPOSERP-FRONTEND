@@ -5,7 +5,7 @@ import { UserService } from '../user.service';
 @Injectable({ providedIn: 'root' })
 export class InactivityService {
   private timeoutId: any;
-  private readonly MINUTES_20 = 1 * 60 * 1000;
+  private readonly MINUTES_5 = 5 * 60 * 1000;
   private _userService = inject(UserService);
   private ngZone = inject(NgZone);
 
@@ -14,7 +14,7 @@ export class InactivityService {
   }
 
   initListener() {
-    console.log('Inatividad iniciada')
+    //console.log('Inatividad iniciada')
     const events = ['mousedown', 'mousemove', 'keypress', 'touchstart'];
     this.ngZone
       .runOutsideAngular(() => {
@@ -25,14 +25,14 @@ export class InactivityService {
   }
 
 private startTimer() {
-      console.log('Inatividad iniciada')
+     // console.log('Inatividad iniciada')
     this.timeoutId = setTimeout(() => {
       // Volvemos a la zona de Angular para ejecutar el logout y la redirección
       this.ngZone.run(() => {
         console.warn('Sesión cerrada por inactividad de 20 minutos');
         this._userService.logOut();
       });
-    }, this.MINUTES_20);
+    }, this.MINUTES_5);
   }
 
   private resetTimer() {

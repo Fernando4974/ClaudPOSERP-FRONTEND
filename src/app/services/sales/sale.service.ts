@@ -24,7 +24,7 @@ export class SaleService{
   }
   // sale.service.ts
   createSale(saleData: any): Observable<any> {
-    console.log(saleData)
+    //console.log(saleData)
     return this.http.post(`${this.appUrl}${this.apiCreateSale}`, saleData);
   }
 
@@ -34,7 +34,7 @@ export class SaleService{
     const params = new HttpParams()
         .set('limit', limit.toString())
         .set('offset', offset.toString());
-    
+
     return this.http.get<GetAllSales[]>(`${this.appUrl}${this.apiGetAllSales}`, { params });
   }
 

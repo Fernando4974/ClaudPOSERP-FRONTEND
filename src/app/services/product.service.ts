@@ -65,7 +65,7 @@ export class ProductService {
         formData.append(key, value.toString());
       }
     });
-console.log(formData)
+//console.log(formData)
     return this.http.post(`${this.appUrl}${this.apiNewProductUrl}`, formData);
   }
    updateProduct(updateProduct: updateProduct, file: File | null, id: string): Observable<any> {
@@ -81,7 +81,7 @@ console.log(formData)
         formData.append(key, value.toString());
       }
     });
-    console.log(formData)
+    //console.log(formData)
      return this.http.patch(`${this.appUrl}${this.apiUpdateProductUrl}/${id}`, formData);
 
   }

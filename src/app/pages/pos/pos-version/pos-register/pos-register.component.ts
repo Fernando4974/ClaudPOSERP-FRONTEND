@@ -94,7 +94,7 @@ getTotalCaja() {
 
     },
     error: (err) => {
-      console.error('Error al obtener total de caja:', err);
+     // console.error('Error al obtener total de caja:', err);
     }
   });
 }
@@ -116,7 +116,7 @@ calcularTotalVentas(): number {
         this.listProduct = data;
         this.assignProductsToButtons();
       },
-      error: (err) => console.error(err)
+     // error: (err) => console.error(err)
     });
   }
 
@@ -309,7 +309,7 @@ validarYBorrar() {
 },
 
     error: (res) => {
-  console.log(res)
+  //console.log(res)
 }
   });
 }
@@ -448,7 +448,7 @@ teclaMenos() {
  cancel() {
 
  this.flagCancel = true;
- console.log('Intentando cancelar venta. Flag cancel:', this.flagCancel);
+ //console.log('Intentando cancelar venta. Flag cancel:', this.flagCancel);
 
 
     }
@@ -495,9 +495,10 @@ crearVenta(metodoPago : string = 'EFECTiVO') {
 
 
   };
-  console.log(nuevaVenta);
+  //console.log(nuevaVenta);
 
   this._saleService.createSale(nuevaVenta).subscribe({
+
     next: (res) => {
       this.ventaFinalizada = res;
       this.ultimaVentaId = res.id;
@@ -521,42 +522,61 @@ crearVenta(metodoPago : string = 'EFECTiVO') {
   `).join('');
         const ventanaImpresion = window.open('', '_black');
         ventanaImpresion?.document.write(`
-    <html>
-      <head>
-        <title>Reporte de Venta - ${fecha}</title>
-        <style>
-          body { font-family: 'Courier New', Courier, monospace; width: 80mm; margin: 0; padding: 10px; }
-          h2 { text-align: center; margin-bottom: 5px; font-size: 16px; }
-          .header { text-align: center; margin-bottom: 15px; font-size: 12px; border-bottom: 2px solid #000; padding-bottom: 5px; }
-          .iva { margin-top: 10px; border-top: 1px solid #000; padding-top: 6px; text-align: right; font-size: 16px; font-weight: bold; }
+   <html>
+  <head>
+    <title>Reporte de Venta - ${fecha}</title>
+    <style>
+      body { font-family: 'Courier New', Courier, monospace; width: 80mm; margin: 0; padding: 10px; }
 
-          .total { margin-top: 15px; border-top: 2px solid #000; padding-top: 10px; text-align: right; font-size: 16px; font-weight: bold; }
-          .footer { margin-top: 20px; text-align: center; font-size: 10px; }
-        </style>
-      </head>
-      <body>
-        <h2>REPORTE DE VENTA</h2>
-        <div class="header">
-          Fecha: ${fecha}<br>
-          Hora: ${hora}<br>
-          Productos: ${this.carrito.length}
-        </div>
-        <div class="items">
-          ${filasProductos}
-        </div>
-         <div class="iva">
-          IVA % ${this.impuestoPorcentaje}: $${(nuevaVenta.iva).toFixed(2)}
-        </div>
-        <div class="total">
-          TOTAL VENTA: $${(this.calcularTotal()).toFixed(2)}
-        </div>
-        <div class="footer">
-         -- Gracias por su Visita -- <br>
-        clauderp.netlify.app
+      /* Estilos para el logo superior */
+      .logo-container {
+        text-align: center;
+        margin-bottom: 10px;
+        width: 100%;
+      }
+      .logo-container img {
+        max-width: 35mm;
+        height: auto;
+      }
 
-        </div>
-      </body>
-    </html>
+      h2 { text-align: center; margin-top: 0; margin-bottom: 5px; font-size: 16px; }
+      .header { text-align: center; margin-bottom: 15px; font-size: 12px; border-bottom: 2px solid #000; padding-bottom: 5px; }
+      .iva { margin-top: 10px; border-top: 1px solid #000; padding-top: 6px; text-align: right; font-size: 16px; font-weight: bold; }
+      .total { margin-top: 15px; border-top: 2px solid #000; padding-top: 10px; text-align: right; font-size: 16px; font-weight: bold; }
+      .footer { margin-top: 20px; text-align: center; font-size: 10px; }
+    </style>
+  </head>
+  <body>
+    <div class="logo-container">
+      <img src="/cloudk.png" alt="Logo">
+    </div>
+
+    <h2>REPORTE DE VENTA</h2>
+
+    <div class="header">
+      Fecha: ${fecha}<br>
+      Hora: ${hora}<br>
+      Productos: ${this.carrito.length}
+    </div>
+
+    <div class="items">
+      ${filasProductos}
+    </div>
+
+    <div class="iva">
+      IVA % ${this.impuestoPorcentaje}: $${(nuevaVenta.iva).toFixed(2)}
+    </div>
+
+    <div class="total">
+      TOTAL VENTA: $${(this.calcularTotal()).toFixed(2)}
+    </div>
+
+    <div class="footer">
+     <strong> -- Gracias por su Visita -- <br>
+      clauderp.netlify.app </strong>
+    </div>
+  </body>
+</html>
   `);
   ventanaImpresion?.document.close();
   ventanaImpresion?.focus();
@@ -578,7 +598,7 @@ crearVenta(metodoPago : string = 'EFECTiVO') {
       }, 500);
     },
     error: (err) => {
-      console.error(err);
+     // console.error(err);
       this.mostrarMensajeTemporal("ERROR AL GUARDAR");
     }
   });

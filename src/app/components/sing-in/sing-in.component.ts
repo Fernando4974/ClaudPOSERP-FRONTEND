@@ -85,7 +85,7 @@ try {
   this._userService.singIn(user).subscribe({
       next: (data)=>{
 
-      console.log(data)
+      //console.log(data)
       alert('User '+ data.user + ' has been created');
       this.router.navigate(['/logIn']);
       },
@@ -95,7 +95,7 @@ try {
           this.alertTexto="Error, el  correo electronico ingresado <br> ya fue registrado anteriormente"
           return
         }
-        console.log(err)
+       // console.log(err)
       alert('The user cant be creates by the error' + err)
 }})
 

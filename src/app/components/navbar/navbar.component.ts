@@ -31,6 +31,7 @@ export class NavbarComponent implements OnInit {
     this.role = sessionStorage.getItem('user_data');
     this.tokenUser = sessionStorage.getItem('token');
     this.userName = sessionStorage.getItem('user_name');
+
   }
   modal() {
     this.modalView = true;

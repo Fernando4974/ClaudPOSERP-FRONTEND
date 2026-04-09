@@ -173,7 +173,13 @@ updateUser(): void {
     // Solo enviamos password si tiene contenido
     ...(rawValue.password ? { password: rawValue.password } : {})
   };
-
+  if (updateData.membershipEnd == ""){
+    updateData.membershipEnd= "2000-01-01"
+  }
+  if (updateData.membershipStart == ""){
+    updateData.membershipStart= "2000-01-01"
+  }
+//console.log(updateData)
   // console.log('Objeto corregido enviado al Back:', updateData);
 
   this.visibleSpinner = true;
@@ -187,6 +193,7 @@ updateUser(): void {
     error: (err) => {
       this.visibleSpinner = false;
       this.alertText = 'Error de validación: ' + JSON.stringify(err.error.message);
+      console.log(err)
     }
   });
 }

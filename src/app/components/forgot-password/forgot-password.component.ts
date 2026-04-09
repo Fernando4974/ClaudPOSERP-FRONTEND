@@ -48,9 +48,9 @@ export class ForgotPasswordComponent implements OnInit {
 
     this._userService.reqPassword(this.email).subscribe({
       next: (res) => {
-        console.log(res);
+        //console.log(res);
         if (res.status == 201) {
-          console.log(res);
+         // console.log(res);
           this.veryfiTexto =
             'Se ha enviado un correo a tu cuenta con las instrucciones para restablecer tu contraseña';
           this.loading = false;
@@ -59,7 +59,7 @@ export class ForgotPasswordComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        console.log(err.status)
+        //console.log(err.status)
         if (err.status == 404) {
           this.alertTexto = 'El correo no esta registrado';
         }

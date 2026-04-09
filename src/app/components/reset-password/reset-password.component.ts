@@ -73,7 +73,7 @@ this.verifyTexto="";
     this._uservice.resetPassword({token:this.token,newPassword:this.password}).subscribe({
 
       next:(res)=>{
-         console.log('next')
+        // console.log('next')
         this.loading=false;
         this.verifyTexto="Contraseña restablecida con éxito, ya puede iniciar sesión con su nueva contraseña";
       this.buttonDisabled=true;
@@ -84,7 +84,7 @@ this.verifyTexto="";
         if(err.status == 409){
           this.alertTexto="La nueva contraseña no puede ser igual a la anterior";
         }else{
-          console.log(err)
+          //console.log(err)
         this.alertTexto="Error al restablecer la contraseña, intente nuevamente";
         }
       }

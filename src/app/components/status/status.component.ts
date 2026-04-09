@@ -46,7 +46,7 @@ export class StatusComponent implements OnInit {
 
       },
       error:(err)=>{
-        console.log(err)
+        //console.log(err)
 
       }
 
@@ -71,7 +71,7 @@ export class StatusComponent implements OnInit {
     (response: any) => {
 
       if (!response || !Array.isArray(response) || response.length === 0) {
-        console.log('La respuesta no es un arreglo o está vacía:', response);
+       // console.log('La respuesta no es un arreglo o está vacía:', response);
         this.mostSaleDay = 'Sin datos';
         return;
       }

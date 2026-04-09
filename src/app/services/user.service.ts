@@ -43,17 +43,17 @@ export class UserService {
   Login(user: UserLogin): Observable<any> {
     return this.http.post(`${this.AppUrl}${this.APIUrlLogin}`, user).pipe(
       tap((response: any) => {
-        console.log('response;', response)
+       // console.log('response;', response)
         // Guardamos el usuario completo (que trae los roles) en el storage
          sessionStorage.setItem('user_data', JSON.stringify(response.userRoles));
-         sessionStorage.setItem('user_name', response.nameUser || response.userName || '');
+         sessionStorage.setItem('user_name', response.user_name );
         this.userSubject.next(response.userRoles);
       })
     );
   }
 getUserRoles(): string {
   const userData =  sessionStorage.getItem('user_data');
-  console.log(userData)
+ // console.log(userData)
   if (!userData) return 'Role Not Found';
 
 
@@ -79,7 +79,7 @@ getUserRoles(): string {
 
   }
   reqPassword(email:string):Observable<any>{
-    console.log(this.AppUrl,this.APIUrlReqReset)
+   // console.log(this.AppUrl,this.APIUrlReqReset)
     return this.http.post(`${this.AppUrl}${this.APIUrlReqReset}`,{email},{observe:'response'})
   }
   resetPassword(data:any):Observable<any>{
@@ -94,7 +94,7 @@ getUserRoles(): string {
 
         // Guardamos el usuario completo (que trae los roles) en el storage
         sessionStorage.setItem('user_data', JSON.stringify(response.userRoles));
-        sessionStorage.setItem('user_name', response.nameUser || response.userName || '');
+        sessionStorage.setItem('user_name', response.user_name );
         this.userSubject.next(response.userRoles);
       })
     );
